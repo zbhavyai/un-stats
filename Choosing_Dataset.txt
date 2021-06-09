@@ -1,0 +1,44 @@
+UN Population Data
+------------------
+Dataset 1: Life expectancy, Population change, Fertility
+Dataset 2: Capital city population, Urban Population
+
+Possible trends:
+- relation between life expectancy and urban population
+- effect of urbanization on population rate change and/or fertility
+
+
+Library
+-------
+Dataset n: English titles, French titles, Card holders
+
+Possible trends:
+- rate of change of number of titles (audio and non-audio) vs card holders
+- library service type vs card holders
+
+
+Cellphone
+---------
+Dataset: cellphones per 100, percentage of internet users, total cell phones
+
+Possible trends:
+- relation between cell phones/100 and internet users
+- some suggestion?
+
+
+Another Possibility - NASA Meteorite Landings
+---------------------------------------------
+Dataset: meteorite landing location, landing year, landing mass
+Link: https://data.nasa.gov/Space-Science/Meteorite-Landings/gh4g-9sfh and https://www.kaggle.com/nasa/meteorite-landings
+
+Possible trends:
+- rate of meteorite falling per year per country
+- rate of meteorites that were no longer meteorites after entering earth's atmosphere
+
+Shortcomings:
+- data available in only one excel
+- to figure out country, need external library or database that can match lat and lon with country names
+    https://stackoverflow.com/questions/6159074/given-the-lat-long-coordinates-how-can-we-find-out-the-city-country
+    One possible solution is to use geopy
+    Other possible solution is to use Google maps API (https://developers.google.com/maps/documentation/geocoding/overview?csw=1)
+    Other solution is to find/create a dataset and then merge it with the main dataset
