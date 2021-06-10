@@ -57,8 +57,9 @@ def df_creation():
     merged5 = merged5[merged5['Urban Population (%)'].str.contains('Urban')]
 
     # Create dataframe multi-indexd
-    dataset = merged4.set_index(['UN Region', 'Country'])
-    print(dataset.head())
+    dataset = merged5.set_index(['UN Region', 'Country'])
+    print(dataset.head()) # Temporary - to print dataframe
+    dataset.to_excel(r"./DataFrameSample.xlsx", index = True, header = True) # Temporary - export
 
     return dataset
 
