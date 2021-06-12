@@ -4,6 +4,7 @@
 
 import ansi_colors as color
 from custom_errors import ValueOutOfRange
+import data_analysis as da
 import time
 import os
 
@@ -43,7 +44,7 @@ def splash_message():
     print(color.reset, end="")
 
     # show the splash screen for 2 seconds and then clear again
-    time.sleep(2)
+    time.sleep(1)
     clear_console()
 
 
@@ -78,6 +79,10 @@ def program_menu():
                 if choice < 0 or choice > 4:
                     raise ValueOutOfRange("This option is not supported. Please choose a valid menu option")
 
+                elif choice == 0:
+                    print("\nBye!\n")
+                    return
+
                 else:
                     break
 
@@ -88,30 +93,30 @@ def program_menu():
                 print("\n" + color.red + str(e) + color.reset)
 
             except KeyboardInterrupt as e:
-                print("\nYou pressed Ctrl+C")
-                print("\n\nBye!\n")
+                print("\n\nYou pressed Ctrl+C. Bye!\n")
+                return
 
 
         # after getting a valid option from the user, perform the requested option
+
+        # creating object of class DataAnalysis
+        analysis = da.DataAnalysis()
+
         if choice == 1:
             # call function for stats for Life Expectancy and Urbanization
-            pass
+            input("\n" + color.cyan + "Press enter to return to the menu " + color.reset)
 
         elif choice == 2:
-            # # call function for stats for Tertiary Education
-            pass
+            # call function for stats for Tertiary Education
+            input("\n" + color.cyan + "Press enter to return to the menu " + color.reset)
 
         elif choice == 3:
             # call function for stats for Fertility and Literacy
-            pass
+            input("\n" + color.cyan + "Press enter to return to the menu " + color.reset)
 
-        elif choice == 4:
+        else: # choice == 4
             # call function for Urbanization and Fertility
-            pass
-
-        else:   # choice == 0:
-            print("\n\nBye!\n")
-            return
+            input("\n" + color.cyan + "Press enter to return to the menu " + color.reset)
 
 
 if __name__ == '__main__':
