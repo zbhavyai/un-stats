@@ -129,3 +129,8 @@ class DataAnalysis:
         # Create multi-indexed dataframe and sort it
         self._dataset = merged5.set_index(['UN Region', 'Country'])
         self._dataset.sort_index()
+
+
+
+    def export_dataset(self, filename):
+        self._dataset.to_excel(r"DataFrameSample.xlsx", index = True, header = True)
