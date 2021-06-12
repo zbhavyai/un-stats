@@ -75,7 +75,7 @@ def program_menu():
         # loop to get valid choice from the user
         while(True):
             try:
-                choice = int(input("\nPlease enter the menu option number (1-4 or 0): "))
+                choice = int(input("\nPlease enter the menu option number: "))
 
                 if choice < 0 or choice > 5:
                     raise ValueOutOfRange("This option is not supported. Please choose a valid menu option")

@@ -33,6 +33,7 @@ class DataAnalysis:
 
     def __init__(self):
         self._import_data("UN Population Datasets", "CustomUNData")
+        self._merge_data()
 
 
 
@@ -46,13 +47,13 @@ class DataAnalysis:
             Returns:
                 None
         """
-
         self._unc_data = pd.read_excel(os.path.join(default_location, "UN Codes.xlsx"))
         self._liv_data = pd.read_excel(os.path.join(default_location, "UN Population Dataset 1.xlsx"))
         self._pop_data = pd.read_excel(os.path.join(default_location, "UN Population Dataset 2.xlsx"))
         self._edu_data = pd.read_csv(os.path.join(custom_location, "UNEducationData.csv"))
         self._gdp_data = pd.read_csv(os.path.join(custom_location, "UNGDPData.csv"))
         self._net_data = pd.read_csv(os.path.join(custom_location, "UNInternetData.csv"))
+
 
 
     def print_imported(self):
@@ -65,7 +66,6 @@ class DataAnalysis:
             Returns:
                 None
         """
-
         print("\n\n" + color.green + "UN Code dataframe" + color.reset + "\n")
         print(self._unc_data)
 
@@ -85,7 +85,8 @@ class DataAnalysis:
         print(self._net_data)
 
 
-    def merge_data(self):
+
+    def _merge_data(self):
         """
         Method to merge the data from different dataframes into one dataframe
 
