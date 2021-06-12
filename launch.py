@@ -43,7 +43,7 @@ def splash_message():
     print("---------------------------------------------------")
     print(color.reset, end="")
 
-    # show the splash screen for 2 seconds and then clear again
+    # show the splash screen for 1 second and then clear again
     time.sleep(1)
     clear_console()
 
@@ -69,6 +69,7 @@ def program_menu():
         print("[2] Print stats for relation between Tertiary Education in all countries")
         print("[3] Print stats for relation between Fertility and Literacy")
         print("[4] Print stats for relation between Urbanization and Fertility")
+        print("[5] Print the imported datasets")
         print("[0] Exit")
 
         # loop to get valid choice from the user
@@ -76,7 +77,7 @@ def program_menu():
             try:
                 choice = int(input("\nPlease enter the menu option number (1-4 or 0): "))
 
-                if choice < 0 or choice > 4:
+                if choice < 0 or choice > 5:
                     raise ValueOutOfRange("This option is not supported. Please choose a valid menu option")
 
                 elif choice == 0:
@@ -114,9 +115,14 @@ def program_menu():
             # call function for stats for Fertility and Literacy
             input("\n" + color.cyan + "Press enter to return to the menu " + color.reset)
 
-        else: # choice == 4
+        elif choice == 4:
             # call function for Urbanization and Fertility
             input("\n" + color.cyan + "Press enter to return to the menu " + color.reset)
+
+        else: # choice == 5
+            analysis.print_imported()
+            input("\n" + color.cyan + "Press enter to return to the menu " + color.reset)
+
 
 
 if __name__ == '__main__':
