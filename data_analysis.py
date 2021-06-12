@@ -133,4 +133,13 @@ class DataAnalysis:
 
 
     def export_dataset(self, filename):
-        self._dataset.to_excel(r"DataFrameSample.xlsx", index = True, header = True)
+        """
+        Method to export the merged indexed sorted dataframe into Excel file
+
+            Parameters:
+                filename (str): the export file name
+
+            Returns:
+                None
+        """
+        self._dataset.to_excel(filename, index = True, header = True)
