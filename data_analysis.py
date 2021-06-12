@@ -28,7 +28,9 @@ class DataAnalysis:
         _dataset
 
     Methods:
-        _import_data
+        _import_data(default_location, custom_location)
+        print_imported()
+        _merge_data()
     """
 
     def __init__(self):
