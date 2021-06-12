@@ -25,6 +25,7 @@ class DataAnalysis:
         _edu_data
         _gdp_data
         _net_data
+        _dataset
 
     Methods:
         _import_data
