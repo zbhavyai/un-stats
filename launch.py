@@ -70,7 +70,7 @@ def program_menu():
         print("[3] Print stats for relation between Fertility and Literacy")
         print("[4] Print stats for relation between Urbanization and Fertility")
         print("[5] Print the imported datasets")
-        print("[6] Export the merged dataset")
+        print("[6] Export the datasets")
         print("[0] Exit")
 
         # loop to get valid choice from the user
@@ -125,7 +125,7 @@ def program_menu():
             input("\n" + color.cyan + "Press enter to return to the menu " + color.reset)
 
         else: # choice == 6
-            analysis.export_dataset(filename="DataTest.xlsx")
+            analysis.export_datasets()
             input("\n" + color.cyan + "Press enter to return to the menu " + color.reset)
 
 
