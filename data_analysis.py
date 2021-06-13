@@ -49,12 +49,41 @@ class DataAnalysis:
             Returns:
                 None
         """
+        # import the UN Codes data, as is
         self._unc_data = pd.read_excel(os.path.join(default_location, "UN Codes.xlsx"))
-        self._liv_data = pd.read_excel(os.path.join(default_location, "UN Population Dataset 1.xlsx"))
-        self._pop_data = pd.read_excel(os.path.join(default_location, "UN Population Dataset 2.xlsx"))
-        self._edu_data = pd.read_csv(os.path.join(custom_location, "UNEducationData.csv"))
-        self._gdp_data = pd.read_csv(os.path.join(custom_location, "UNGDPData.csv"))
-        self._net_data = pd.read_csv(os.path.join(custom_location, "UNInternetData.csv"))
+
+        # import specific columns from the UN Population Dataset 1
+        liv_data_raw = pd.read_excel(os.path.join(default_location, "UN Population Dataset 1.xlsx"), usecols="B:E")
+
+        # creating temporary dataset with Series filtered on "Population annual rate of increase (percent)"
+        filter_series = "Population annual rate of increase (percent)"
+        liv_data_population = liv_data_raw[liv_data_raw["Series"] == filter_series].drop("Series", axis=1).rename(columns={"Value": filter_series})
+
+        # creating temporary dataset with Series filtered on "Total fertility rate (children per women)"
+        filter_series = "Total fertility rate (children per women)"
+        liv_data_fertility = liv_data_raw[liv_data_raw["Series"] == filter_series].drop("Series", axis=1).rename(columns={"Value": filter_series})
+
+        # creating temporary dataset with Series filtered on "Life expectancy at birth for both sexes (years)"
+        filter_series = "Life expectancy at birth for both sexes (years)"
+        liv_data_expectancy = liv_data_raw[liv_data_raw["Series"] == filter_series].drop("Series", axis=1).rename(columns={"Value": filter_series})
+
+        # join dataframe liv_data_population and liv_data_fertility
+        liv_data_temp = pd.merge(liv_data_population, liv_data_fertility, how="outer", on=["Region/Country/Area", "Year"])
+
+        # join dataframe liv_data_temp and liv_data_expectancy
+        self._liv_data = pd.merge(liv_data_temp, liv_data_expectancy, how="outer", on=["Region/Country/Area", "Year"])
+
+        # import specific columns from from the UN Population Dataset 2
+        pop_data_raw = pd.read_excel(os.path.join(default_location, "UN Population Dataset 2.xlsx"), usecols="B:D, F")
+
+        # creating dataset with Series filtered on "Urban population (percent)"
+        filter_series = "Urban population (percent)"
+        self._pop_data = pop_data_raw[pop_data_raw["Series"] == filter_series].drop("Series", axis=1).rename(columns={"Value": filter_series}).reset_index(drop=True)
+
+        # keeping extra data aside for now
+        # self._edu_data = pd.read_csv(os.path.join(custom_location, "UNEducationData.csv"))
+        # self._gdp_data = pd.read_csv(os.path.join(custom_location, "UNGDPData.csv"))
+        # self._net_data = pd.read_csv(os.path.join(custom_location, "UNInternetData.csv"))
 
 
 
@@ -77,18 +106,42 @@ class DataAnalysis:
         print("\n\n" + color.green + "UN Population dataframe" + color.reset + "\n")
         print(self._pop_data)
 
-        print("\n\n" + color.green + "UN Education dataframe" + color.reset + "\n")
-        print(self._edu_data)
+        # print("\n\n" + color.green + "UN Education dataframe" + color.reset + "\n")
+        # print(self._edu_data)
 
-        print("\n\n" + color.green + "UN Gross Domestic Product dataframe" + color.reset + "\n")
-        print(self._gdp_data)
+        # print("\n\n" + color.green + "UN Gross Domestic Product dataframe" + color.reset + "\n")
+        # print(self._gdp_data)
 
-        print("\n\n" + color.green + "UN Internet Usage dataframe" + color.reset + "\n")
-        print(self._net_data)
+        # print("\n\n" + color.green + "UN Internet Usage dataframe" + color.reset + "\n")
+        # print(self._net_data)
 
 
 
     def _merge_data(self):
+        """
+        Method to merge the data from different dataframes into one dataframe
+
+            Parameters:
+                none
+
+            Returns:
+                None
+        """
+        # merging "UN Codes" data "UN Population Dataset 1" into dataset_temp
+        dataset_temp = pd.merge(self._unc_data, self._liv_data, how="left", left_on="Country", right_on="Region/Country/Area").drop("Region/Country/Area", axis=1)
+
+        # merging dataset_temp data "UN Population Dataset 2" into dataset
+        self._dataset = pd.merge(dataset_temp, self._pop_data, how="left", left_on=["Country", "Year"], right_on=["Region/Country/Area", "Year"]).drop("Region/Country/Area", axis=1)
+
+        # create the index on Region, Sub-Region and Country
+        self._dataset.set_index(["UN Region", "UN Sub-Region", "Country"], inplace=True)
+
+        # sort the indexes
+        self._dataset.sort_index(inplace=True)
+
+
+
+    def _alt_merge_data(self):
         """
         Method to merge the data from different dataframes into one dataframe
 
@@ -132,14 +185,17 @@ class DataAnalysis:
 
 
 
-    def export_dataset(self, filename):
+    def export_datasets(self):
         """
-        Method to export the merged indexed sorted dataframe into Excel file
+        Method to export all the dataframes into Excel files with default filenames
 
             Parameters:
-                filename (str): the export file name
+                none
 
             Returns:
                 None
         """
-        self._dataset.to_excel(filename, index = True, header = True)
+        self._unc_data.to_excel("Export UN Codes.xlsx", index=True, header=True)
+        self._liv_data.to_excel("Export UN Population Dataset 1.xlsx", index=True, header=True)
+        self._pop_data.to_excel("Export UN Population Dataset 2.xlsx", index=True, header=True)
+        self._dataset.to_excel("Export UN Data", index = True, header = True)
