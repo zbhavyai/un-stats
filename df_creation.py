@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import os
 
+#pd.options.mode.chained_assignment = None #To remove the warning - need to check how to 
+# do it without the warning
 
 def df_creation():
     """
@@ -21,11 +23,12 @@ def df_creation():
     edu_data = pd.read_csv('UNEducationData.csv')
     gdp_data = pd.read_csv('UNGDPData.csv')
     internet_data = pd.read_csv('UNInternetData.csv')
+    un_pop_data = pd.read_csv('UNAnnualPopulation.csv')
 
     # First merge for UN Codes and Education Data filter by Tertiary Education
     merged1 = pd.merge(codes,edu_data, how='outer',left_on='Country',
         right_on='Region/Country/Area')
-    merged1 = merged1.drop(['Region/Country/Area', 'UN Sub-Region'], axis=1).dropna()
+    merged1 = merged1.drop(['Region/Country/Area'], axis=1).dropna()
     merged1 = merged1[merged1['Series'].str.contains('tertiary')]
 
     # Second merge for Merge1 and Life Data filter by Fertility Rate
@@ -56,16 +59,18 @@ def df_creation():
     merged5 = merged5.rename(columns = {'Series': 'Urban Population (%)', 'Value' : 'Percentage 2'})
     merged5 = merged5[merged5['Urban Population (%)'].str.contains('Urban')]
 
+    merged6 = pd.merge(merged5, un_pop_data, how = 'inner', left_on=['Country','Year'],
+                    right_on =['Location', 'Time'])
+    merged6 = merged6.drop(['LocID', 'VarID', 'Variant', 'MidPeriod', 'PopDensity', 'Location',
+                    'Time'], axis = 1)
+    merged6 = merged6.rename(columns = {'Pop Male': 'Pop Male (Thousands)', 'PopFemale' : 'Pop Female (Thousands)', 'PopTotal': 'Pop Total (Thousands)' })
+
     # Create dataframe multi-indexd
-    dataset = merged5.set_index(['UN Region', 'Country'])
-    print(dataset.head()) # Temporary - to print dataframe
+    dataset = merged6.set_index(['UN Region', 'UN Sub-Region', 'Country']).sort_values(by= ["UN Region", "UN Sub-Region", 'Country'])
+    #print(dataset.head()) # Temporary - to print dataframe
     dataset.to_excel(r"./DataFrameSample.xlsx", index = True, header = True) # Temporary - export
 
     return dataset
 
 df_creation()
-
-
-
-    
 
