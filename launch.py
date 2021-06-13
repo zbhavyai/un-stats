@@ -64,15 +64,19 @@ def program_menu():
         # clear the console everytime menu is printed
         clear_console()
 
-        print("\n" + color.yellow + "Program menu" + color.reset + "\n")
-        print("[1] Print stats for relation between Life Expectancy and Urbanization")
-        print("[2] Print stats for relation between Tertiary Education in all countries")
-        print("[3] Print stats for relation between Fertility and Literacy")
-        print("[4] Print stats for relation between Urbanization and Fertility")
-        print("[5] Print the imported datasets")
-        print("[6] Export the datasets")
-        print("[7] Print aggregate stats for the entire dataset")
-        print("[0] Exit")
+        print("\n" + color.yellow + "Program menu" + color.reset)
+        # generic options
+        print("\n[1] Print the imported datasets")
+        print("\n[2] Export the entire merged hierarchical dataset into Excel")
+        print("\n[3] Print aggregate stats for the entire dataset")
+
+        # data specific options
+        print("\n[4] Print stats for relation between Life Expectancy and Urbanization")
+        print("\n[5] Print stats for relation between Tertiary Education in all countries")
+        print("\n[6] Print stats for relation between Fertility and Literacy")
+        print("\n[7] Print stats for relation between Urbanization and Fertility")
+
+        print("\n[0] Exit")
 
         # loop to get valid choice from the user
         while(True):
@@ -106,15 +110,15 @@ def program_menu():
         analysis = da.DataAnalysis()
 
         if choice == 1:
-            # call function for stats for Life Expectancy and Urbanization
+            analysis.print_imported()
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
         elif choice == 2:
-            # call function for stats for Tertiary Education
+            analysis.export_dataset()
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
         elif choice == 3:
-            # call function for stats for Fertility and Literacy
+            analysis.aggregate_stats()
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
         elif choice == 4:
@@ -122,15 +126,15 @@ def program_menu():
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
         elif choice == 5:
-            analysis.print_imported()
+            # call function for stats for Life Expectancy and Urbanization
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
         elif choice == 6:
-            analysis.export_dataset()
+            # call function for stats for Tertiary Education
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
         else: # choice == 7
-            analysis.aggregate_stats()
+            # call function for stats for Fertility and Literacy
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
 
