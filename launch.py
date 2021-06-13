@@ -70,6 +70,7 @@ def program_menu():
         print("[3] Print stats for relation between Fertility and Literacy")
         print("[4] Print stats for relation between Urbanization and Fertility")
         print("[5] Print the imported datasets")
+        print("[6] Export the merged dataset")
         print("[0] Exit")
 
         # loop to get valid choice from the user
@@ -77,7 +78,7 @@ def program_menu():
             try:
                 choice = int(input("\nPlease enter the menu option number: "))
 
-                if choice < 0 or choice > 5:
+                if choice < 0 or choice > 6:
                     raise ValueOutOfRange("This option is not supported. Please choose a valid menu option")
 
                 elif choice == 0:
@@ -119,8 +120,12 @@ def program_menu():
             # call function for Urbanization and Fertility
             input("\n" + color.cyan + "Press enter to return to the menu " + color.reset)
 
-        else: # choice == 5
+        elif choice == 5:
             analysis.print_imported()
+            input("\n" + color.cyan + "Press enter to return to the menu " + color.reset)
+
+        else: # choice == 6
+            analysis.export_dataset(filename="DataTest.xlsx")
             input("\n" + color.cyan + "Press enter to return to the menu " + color.reset)
 
 
