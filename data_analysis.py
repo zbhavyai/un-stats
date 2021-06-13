@@ -103,7 +103,7 @@ class DataAnalysis:
         print("\n\n" + color.green + "UN Life Expectancy and Fertility dataframe" + color.reset + "\n")
         print(self._liv_data)
 
-        print("\n\n" + color.green + "UN Population dataframe" + color.reset + "\n")
+        print("\n\n" + color.green + "UN Urban Population dataframe" + color.reset + "\n")
         print(self._pop_data)
 
         # print("\n\n" + color.green + "UN Education dataframe" + color.reset + "\n")
@@ -198,4 +198,4 @@ class DataAnalysis:
         self._unc_data.to_excel("Export UN Codes.xlsx", index=True, header=True)
         self._liv_data.to_excel("Export UN Population Dataset 1.xlsx", index=True, header=True)
         self._pop_data.to_excel("Export UN Population Dataset 2.xlsx", index=True, header=True)
-        self._dataset.to_excel("Export UN Data", index = True, header = True)
+        self._dataset.to_excel("Export UN Data.xlsx", index = True, header = True)
