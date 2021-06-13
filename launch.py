@@ -38,13 +38,13 @@ def splash_message():
     clear_console()
 
     print(color.magenta)
-    print("---------------------------------------------------")
-    print(" Welcome to UN Population and Education Statistics")
-    print("---------------------------------------------------")
+    print("--------------------------")
+    print(" Welcome to UN Statistics")
+    print("--------------------------")
     print(color.reset, end="")
 
     # show the splash screen for 1 second and then clear again
-    time.sleep(1)
+    time.sleep(1.5)
     clear_console()
 
 
@@ -59,6 +59,10 @@ def program_menu():
         Returns:
             None
     """
+    # creating object of class DataAnalysis
+    analysis = da.DataAnalysis()
+
+
     # loop to keep printing the menu until Exit
     while(True):
         # clear the console everytime menu is printed
@@ -67,7 +71,7 @@ def program_menu():
         print("\n" + color.yellow + "Program menu" + color.reset)
         # generic options
         print("\n[1] Print the imported datasets")
-        print("\n[2] Export the entire merged hierarchical dataset into Excel")
+        print("\n[2] Re-export the entire merged hierarchical dataset into Excel")
         print("\n[3] Print aggregate stats for the entire dataset")
 
         # data specific options
@@ -105,9 +109,6 @@ def program_menu():
 
 
         # after getting a valid option from the user, perform the requested option
-
-        # creating object of class DataAnalysis
-        analysis = da.DataAnalysis()
 
         if choice == 1:
             analysis.print_imported()

@@ -4,6 +4,7 @@
 
 import pandas as pd
 import ansi_colors as color
+import time
 import os
 
 
@@ -34,8 +35,21 @@ class DataAnalysis:
     """
 
     def __init__(self):
+        print("\n" + color.yellow + "Please wait while the program initializes..." + color.reset)
+        time.sleep(2)
+        print("\n[Step 1/4] Importing data from excel and csv files")
         self._import_data("UN Population Datasets", "CustomUNData")
+        print("[Step 1/4] Successful")
+        print("\n[Step 2/4] Merging all data into one dataframe")
         self._merge_data()
+        print("[Step 2/4] Successful")
+        print("\n[Step 3/4] Checking null values")
+        self.check_null()
+        print("[Step 3/4] Successful")
+        print("\n[Step 4/4] Exporting entire merged hierarchical dataset into excel")
+        self.export_dataset()
+        print("[Step 4/4] Successful")
+        input("\n\n" + color.blue + "Press enter to enter program menu " + color.reset)
 
 
 
@@ -145,7 +159,7 @@ class DataAnalysis:
 
     def export_dataset(self):
         """
-        Method to export all the dataframes into Excel files with default filenames
+        Method to export the entire merged hierarchical dataframe into Excel files with default filename
 
             Parameters:
                 none
@@ -155,7 +169,7 @@ class DataAnalysis:
         """
         try:
             self._dataset.to_excel("Export UN Data.xlsx", index = True, header = True)
-            print("\n" + color.magenta + "File \'Export UN Data.xlsx\' created" + color.reset)
+            print("File \'Export UN Data.xlsx\' created")
 
         except Exception as e:
             print("\n" + color.red + "An exception occurred during export. Please check the below message and try again" + color.reset + "\n")
@@ -173,7 +187,6 @@ class DataAnalysis:
             Returns:
                 None
         """
-        print("\n" + color.magenta + "Checking null values" + color.reset)
         print(self._dataset.isnull().any())
 
 
