@@ -126,7 +126,7 @@ def program_menu():
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
         elif choice == 6:
-            analysis.export_datasets()
+            analysis.export_dataset()
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
         else: # choice == 7

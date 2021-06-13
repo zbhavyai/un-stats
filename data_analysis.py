@@ -143,7 +143,7 @@ class DataAnalysis:
 
 
 
-    def export_datasets(self):
+    def export_dataset(self):
         """
         Method to export all the dataframes into Excel files with default filenames
 
@@ -154,14 +154,6 @@ class DataAnalysis:
                 None
         """
         try:
-            self._unc_data.to_excel("Export UN Codes.xlsx", index=True, header=True)
-            print("\n" + color.magenta + "File \'Export UN Codes.xlsx\' created" + color.reset)
-            self._liv_data.to_excel("Export UN Population Dataset 1.xlsx", index=True, header=True)
-            print("\n" + color.magenta + "File \'Export UN Population Dataset 1.xlsx\' created" + color.reset)
-            self._pop_data.to_excel("Export UN Population Dataset 2.xlsx", index=True, header=True)
-            print("\n" + color.magenta + "File \'Export UN Population Dataset 2.xlsx\' created" + color.reset)
-            self._gdp_data.to_excel("Export UN GDP Dataset.xlsx", index=True, header=True)
-            print("\n" + color.magenta + "File \'Export UN GDP Dataset.xlsx\' created" + color.reset)
             self._dataset.to_excel("Export UN Data.xlsx", index = True, header = True)
             print("\n" + color.magenta + "File \'Export UN Data.xlsx\' created" + color.reset)
 
