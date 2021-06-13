@@ -68,10 +68,10 @@ class DataAnalysis:
         liv_data_expectancy = liv_data_raw[liv_data_raw["Series"] == filter_series].drop("Series", axis=1).rename(columns={"Value": filter_series})
 
         # join dataframe liv_data_population and liv_data_fertility
-        liv_data_temp = pd.merge(liv_data_population, liv_data_fertility, how="outer", on=["Region/Country/Area", "Year"])
+        liv_data_temp = pd.merge(liv_data_population, liv_data_fertility, how="inner", on=["Region/Country/Area", "Year"])
 
         # join dataframe liv_data_temp and liv_data_expectancy
-        self._liv_data = pd.merge(liv_data_temp, liv_data_expectancy, how="outer", on=["Region/Country/Area", "Year"])
+        self._liv_data = pd.merge(liv_data_temp, liv_data_expectancy, how="inner", on=["Region/Country/Area", "Year"])
 
         # import specific columns from from the UN Population Dataset 2
         pop_data_raw = pd.read_excel(os.path.join(default_location, "UN Population Dataset 2.xlsx"), usecols="B:D, F")
@@ -149,6 +149,9 @@ class DataAnalysis:
         # sort the indexes
         self._dataset.sort_index(inplace=True)
 
+        # dropping the null values
+        self._dataset.dropna(inplace=True)
+
 
 
     def export_datasets(self):
@@ -171,3 +174,18 @@ class DataAnalysis:
         print("\n" + color.green + "File \'Export UN GDP Dataset.xlsx\' created" + color.reset)
         self._dataset.to_excel("Export UN Data.xlsx", index = True, header = True)
         print("\n" + color.green + "File \'Export UN Data.xlsx\' created" + color.reset)
+
+
+
+    def check_null(self):
+        """
+        Method to check null values in the dataset.
+
+            Parameters:
+                none
+
+            Returns:
+                None
+        """
+        print("\n" + color.blue + "Checking null values" + color.reset)
+        print(self._dataset.isnull().any())
