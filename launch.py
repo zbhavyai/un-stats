@@ -71,6 +71,7 @@ def program_menu():
         print("[4] Print stats for relation between Urbanization and Fertility")
         print("[5] Print the imported datasets")
         print("[6] Export the datasets")
+        print("[7] Print aggregate stats for the entire dataset")
         print("[0] Exit")
 
         # loop to get valid choice from the user
@@ -78,7 +79,7 @@ def program_menu():
             try:
                 choice = int(input("\nPlease enter the menu option number: "))
 
-                if choice < 0 or choice > 6:
+                if choice < 0 or choice > 7:
                     raise ValueOutOfRange("This option is not supported. Please choose a valid menu option")
 
                 elif choice == 0:
@@ -106,27 +107,31 @@ def program_menu():
 
         if choice == 1:
             # call function for stats for Life Expectancy and Urbanization
-            input("\n" + color.cyan + "Press enter to return to the menu " + color.reset)
+            input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
         elif choice == 2:
             # call function for stats for Tertiary Education
-            input("\n" + color.cyan + "Press enter to return to the menu " + color.reset)
+            input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
         elif choice == 3:
             # call function for stats for Fertility and Literacy
-            input("\n" + color.cyan + "Press enter to return to the menu " + color.reset)
+            input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
         elif choice == 4:
             # call function for Urbanization and Fertility
-            input("\n" + color.cyan + "Press enter to return to the menu " + color.reset)
+            input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
         elif choice == 5:
             analysis.print_imported()
-            input("\n" + color.cyan + "Press enter to return to the menu " + color.reset)
+            input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
-        else: # choice == 6
+        elif choice == 6:
             analysis.export_datasets()
-            input("\n" + color.cyan + "Press enter to return to the menu " + color.reset)
+            input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
+
+        else: # choice == 7
+            analysis.aggregate_stats()
+            input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
 
 

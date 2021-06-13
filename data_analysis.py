@@ -88,11 +88,6 @@ class DataAnalysis:
         self._gdp_data = gdp_data_raw[gdp_data_raw["Series"] == filter_series].drop("Series", axis=1).rename(columns={"Value": filter_series}).reset_index(drop=True)
 
 
-        # keeping extra data aside for now
-        # self._edu_data = pd.read_csv(os.path.join(custom_location, "UNEducationData.csv"))
-        # self._net_data = pd.read_csv(os.path.join(custom_location, "UNInternetData.csv"))
-
-
 
     def print_imported(self):
         """
@@ -104,23 +99,17 @@ class DataAnalysis:
             Returns:
                 None
         """
-        print("\n\n" + color.green + "UN Codes dataframe" + color.reset + "\n")
+        print("\n\n" + color.magenta + "UN Codes dataframe" + color.reset + "\n")
         print(self._unc_data)
 
-        print("\n\n" + color.green + "UN Life Expectancy and Fertility dataframe" + color.reset + "\n")
+        print("\n\n" + color.magenta + "UN Life Expectancy and Fertility dataframe" + color.reset + "\n")
         print(self._liv_data)
 
-        print("\n\n" + color.green + "UN Urban Population dataframe" + color.reset + "\n")
+        print("\n\n" + color.magenta + "UN Urban Population dataframe" + color.reset + "\n")
         print(self._pop_data)
 
-        # print("\n\n" + color.green + "UN Education dataframe" + color.reset + "\n")
-        # print(self._edu_data)
-
-        print("\n\n" + color.green + "UN Gross Domestic Product dataframe" + color.reset + "\n")
+        print("\n\n" + color.magenta + "UN Gross Domestic Product dataframe" + color.reset + "\n")
         print(self._gdp_data)
-
-        # print("\n\n" + color.green + "UN Internet Usage dataframe" + color.reset + "\n")
-        # print(self._net_data)
 
 
 
@@ -164,16 +153,21 @@ class DataAnalysis:
             Returns:
                 None
         """
-        self._unc_data.to_excel("Export UN Codes.xlsx", index=True, header=True)
-        print("\n" + color.green + "File \'Export UN Codes.xlsx\' created" + color.reset)
-        self._liv_data.to_excel("Export UN Population Dataset 1.xlsx", index=True, header=True)
-        print("\n" + color.green + "File \'Export UN Population Dataset 1.xlsx\' created" + color.reset)
-        self._pop_data.to_excel("Export UN Population Dataset 2.xlsx", index=True, header=True)
-        print("\n" + color.green + "File \'Export UN Population Dataset 2.xlsx\' created" + color.reset)
-        self._gdp_data.to_excel("Export UN GDP Dataset.xlsx", index=True, header=True)
-        print("\n" + color.green + "File \'Export UN GDP Dataset.xlsx\' created" + color.reset)
-        self._dataset.to_excel("Export UN Data.xlsx", index = True, header = True)
-        print("\n" + color.green + "File \'Export UN Data.xlsx\' created" + color.reset)
+        try:
+            self._unc_data.to_excel("Export UN Codes.xlsx", index=True, header=True)
+            print("\n" + color.magenta + "File \'Export UN Codes.xlsx\' created" + color.reset)
+            self._liv_data.to_excel("Export UN Population Dataset 1.xlsx", index=True, header=True)
+            print("\n" + color.magenta + "File \'Export UN Population Dataset 1.xlsx\' created" + color.reset)
+            self._pop_data.to_excel("Export UN Population Dataset 2.xlsx", index=True, header=True)
+            print("\n" + color.magenta + "File \'Export UN Population Dataset 2.xlsx\' created" + color.reset)
+            self._gdp_data.to_excel("Export UN GDP Dataset.xlsx", index=True, header=True)
+            print("\n" + color.magenta + "File \'Export UN GDP Dataset.xlsx\' created" + color.reset)
+            self._dataset.to_excel("Export UN Data.xlsx", index = True, header = True)
+            print("\n" + color.magenta + "File \'Export UN Data.xlsx\' created" + color.reset)
+
+        except Exception as e:
+            print("\n" + color.red + "An exception occurred during export. Please check the below message and try again" + color.reset + "\n")
+            print(e)
 
 
 
@@ -187,5 +181,20 @@ class DataAnalysis:
             Returns:
                 None
         """
-        print("\n" + color.blue + "Checking null values" + color.reset)
+        print("\n" + color.magenta + "Checking null values" + color.reset)
         print(self._dataset.isnull().any())
+
+
+
+    def aggregate_stats(self):
+        """
+        Method to print aggregate stats for the entire dataset
+
+            Parameters:
+                none
+
+            Returns:
+                None
+        """
+        print("\n" + color.magenta + "Aggregate statistics for the entire dataset" + color.reset + "\n")
+        print(self._dataset.describe())
