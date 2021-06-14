@@ -263,10 +263,6 @@ class DataAnalysis:
             except ValueOutOfRange as e:
                 print("\n" + color.red + str(e) + color.reset)
 
-            except KeyboardInterrupt as e:
-                print("\n\nYou pressed Ctrl+C. Bye!\n")
-                return
-
         # here we have got choice_region_type
 
         while(True):
@@ -289,10 +285,6 @@ class DataAnalysis:
 
             except ValueOutOfRange as e:
                 print("\n" + color.red + str(e) + color.reset)
-
-            except KeyboardInterrupt as e:
-                print("\n\nYou pressed Ctrl+C. Bye!\n")
-                return
 
         # now we have got choice_region_type and choice_column
 
@@ -321,11 +313,8 @@ class DataAnalysis:
             except ValueOutOfRange as e:
                 print("\n" + color.red + str(e) + color.reset)
 
-            except KeyboardInterrupt as e:
-                print("\n\nYou pressed Ctrl+C. Bye!\n")
-                return
-
         # now we have got all three choice_region_type, choice_column, and choice_stat. So running the aggregate
+        print("\n" + color.green + "Here are the requested stats" + color.reset)
         print(self._dataset.groupby([choice_region_type, "Year"])[choice_column].aggregate(choice_stat).unstack())
 
 
