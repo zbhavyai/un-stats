@@ -53,12 +53,12 @@ class DataAnalysis:
         self._merge_data()
         print("[Step 2/5] " + color.green + "complete" + color.reset)
 
-        print("\n[Step 3/5] Checking null values\n")
-        self.check_null()
+        print("\n[Step 3/5] Adding extra columns to the entire combined dataframe")
+        self._additional_statistics()
         print("\n[Step 3/5] " + color.green + "complete" + color.reset)
 
-        print("\n[Step 4/5] Adding extra columns to the entire combined dataframe")
-        self._additional_statistics()
+        print("\n[Step 4/5] Checking null values\n")
+        self.check_null()
         print("\n[Step 4/5] " + color.green + "complete" + color.reset)
 
         print("\n[Step 5/5] Exporting entire merged hierarchical dataset into excel")
@@ -316,6 +316,26 @@ class DataAnalysis:
         # now we have got all three choice_region_type, choice_column, and choice_stat. So running the aggregate
         print("\n" + color.green + "Here are the requested stats" + color.reset)
         print(self._dataset.groupby([choice_region_type, "Year"])[choice_column].aggregate(choice_stat).unstack())
+
+
+
+    def higher_gdp_than_usa(self):
+        """
+        Method to show use of additional column "GDP per capita wrt USA". This method lists the
+        countries that have had higher GDP per capita than the USA, and the years in which
+        the said figure was higher
+
+            Parameters:
+                none
+
+            Returns:
+                None
+        """
+        higher_gdp = self._dataset[self._dataset["GDP per capita wrt USA"] > 1].reset_index()
+
+        print("\n" + color.magenta + "Showing list of countries that have had higher GDP per capita than USA and in what year" + color.reset + "\n")
+        higher_gdp = higher_gdp[["Country", "Year"]].sort_values(by=["Country", "Year"])
+        print(higher_gdp.to_string(index=False))
 
 
 

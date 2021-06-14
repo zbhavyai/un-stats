@@ -77,9 +77,8 @@ def program_menu():
 
         # data specific options
         print("\n[4] Print aggregation stats grouped by UN Region/UN Sub-Region and available years")
-        # print("\n[5] Print stats for Additional Data columns")
+        print("\n[5] Print the list of countries that have higher GDP per capita than USA, and the year")
         print("\n[6] Show plot of Population Increase, Total Fertility Rate and Life Expectancy for a country")
-        # print("\n[7] Print stats for relation between Urbanization and Fertility")
 
         print("\n[0] Exit")
 
@@ -88,7 +87,7 @@ def program_menu():
             try:
                 choice = int(input("\nPlease enter the menu option number: "))
 
-                if choice < 0 or choice > 7:
+                if choice < 0 or choice > 6:
                     raise ValueOutOfRange("This option is not supported. Please choose a valid menu option")
 
                 elif choice == 0:
@@ -103,11 +102,6 @@ def program_menu():
 
             except ValueOutOfRange as e:
                 print("\n" + color.red + str(e) + color.reset)
-
-            except KeyboardInterrupt as e:
-                print("\n\nYou pressed Ctrl+C. Bye!\n")
-                return
-
 
         # after getting a valid option from the user, perform the requested option
 
@@ -124,22 +118,16 @@ def program_menu():
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
         elif choice == 4:
-            # call function to show the averages for a specific column for all Sub-Regions ranging in years.
             analysis.group_by_stats()
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
         elif choice == 5:
-            # call function for dataset with Additional Statistics
-            # analysis.additional_statistics()
+            analysis.higher_gdp_than_usa()
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
-        elif choice == 6:
+        else: # choice == 6:
             # call to show plot of Population Increase, Total Fertility Rate and Life Expectancy
             analysis.pivot_plot()
-            input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
-
-        else: # choice == 7
-            # call function for stats for Fertility and Literacy
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
 
