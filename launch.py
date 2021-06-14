@@ -112,7 +112,7 @@ def program_menu():
         # after getting a valid option from the user, perform the requested option
 
         if choice == 1:
-            analysis.print_imported()
+            analysis.print_imported_dataframes()
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
         elif choice == 2:
@@ -120,7 +120,7 @@ def program_menu():
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
         elif choice == 3:
-            analysis.aggregate_stats()
+            analysis.print_aggregate_stats()
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
         elif choice == 4:

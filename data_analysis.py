@@ -21,20 +21,24 @@ class DataAnalysis:
         - merges the data together into one dataframe
         - indexes the dataframe and sorts depending on the index
         - checks the null values and data mismatches
+        - exports the entire merged hierarchical dataset into excel
 
     Attributes:
         _unc_data
         _liv_data
         _pop_data
-        _edu_data
         _gdp_data
-        _net_data
         _dataset
 
     Methods:
         _import_data(default_location, custom_location)
-        print_imported()
+        print_imported_dataframes()
         _merge_data()
+        export_dataset()
+        check_null()
+        print_aggregate_stats()
+        additional_statistics()
+        pivot_plot()
     """
 
     def __init__(self):
@@ -106,7 +110,7 @@ class DataAnalysis:
 
 
 
-    def print_imported(self):
+    def print_imported_dataframes(self):
         """
         Method to print the imported data from Excel or CSV
 
@@ -194,7 +198,7 @@ class DataAnalysis:
 
 
 
-    def aggregate_stats(self):
+    def print_aggregate_stats(self):
         """
         Method to print aggregate stats for the entire dataset
 
