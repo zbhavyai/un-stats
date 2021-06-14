@@ -295,7 +295,7 @@ class DataAnalysis:
 
         # Extra column 1
         # ----------------------------------------
-        # Adding extra column "Normalized GDP per capita", which is ratio of "GDP per capita (US dollars)" of the country and "GDP per capita (US dollars)" of the "United States of America"
+        # Adding extra column "GDP per capita wrt USA", which is ratio of "GDP per capita (US dollars)" of the country and "GDP per capita (US dollars)" of the "United States of America"
 
         # get the GDP for United States
         us_gdp_capita = self._dataset.loc[idx[:, :, "United States of America"], idx["Year", "GDP per capita (US dollars)"]]
@@ -309,11 +309,11 @@ class DataAnalysis:
             # fetch the gdp of US for "Year" = y
             us_gdp_capita_y = float(us_gdp_capita[us_gdp_capita["Year"] == y]["GDP per capita (US dollars)"])
 
-            # for the "Year" = y, calculate Normalized GDP = GDP per capita / GDP per capita of US
-            self._dataset.loc[idx[self._dataset["Year"] == y], idx["Normalized GDP per capita"]] = self._dataset.loc[idx[self._dataset["Year"] == y], idx["GDP per capita (US dollars)"]] / us_gdp_capita_y
+            # for the "Year" = y, calculate GDP per capita wrt USA = GDP per capita / GDP per capita of USA
+            self._dataset.loc[idx[self._dataset["Year"] == y], idx["GDP per capita wrt USA"]] = self._dataset.loc[idx[self._dataset["Year"] == y], idx["GDP per capita (US dollars)"]] / us_gdp_capita_y
 
         # printing what column has been added - to make it easy for TAs
-        print("\nAdded column \'Normalized GDP per capita\' to the dataset")
+        print("\nAdded column \'GDP per capita wrt USA\' to the dataset")
         # ----------------------------------------
 
 
