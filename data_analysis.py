@@ -44,18 +44,25 @@ class DataAnalysis:
     def __init__(self):
         print("\n" + color.yellow + "Please wait while the program initializes..." + color.reset)
         time.sleep(2)
-        print("\n[Step 1/4] Importing data from excel and csv files")
+        print("\n[Step 1/5] Importing data from excel and csv files")
         self._import_data("UN Population Datasets", "CustomUNData")
-        print("[Step 1/4] Successful")
-        print("\n[Step 2/4] Merging all data into one dataframe")
+        print("[Step 1/5] " + color.green + "complete" + color.reset)
+
+        print("\n[Step 2/5] Merging all data into one dataframe")
         self._merge_data()
-        print("[Step 2/4] Successful")
-        print("\n[Step 3/4] Checking null values")
+        print("[Step 2/5] " + color.green + "complete" + color.reset)
+
+        print("\n[Step 3/5] Checking null values\n")
         self.check_null()
-        print("[Step 3/4] Successful")
-        print("\n[Step 4/4] Exporting entire merged hierarchical dataset into excel")
+        print("\n[Step 3/5] " + color.green + "complete" + color.reset)
+
+        print("\n[Step 4/5] Adding extra columns to the entire combined dataframe")
+        self._additional_statistics()
+        print("\n[Step 4/5] " + color.green + "complete" + color.reset)
+
+        print("\n[Step 5/5] Exporting entire merged hierarchical dataset into excel")
         self.export_dataset()
-        print("[Step 4/4] Successful")
+        print("[Step 5/5] " + color.green + "complete" + color.reset)
         input("\n\n" + color.blue + "Press enter to enter program menu " + color.reset)
 
 
@@ -70,10 +77,17 @@ class DataAnalysis:
             Returns:
                 None
         """
-        # import the UN Codes data, as is
+        # Importing UN Codes dataset
+        # ----------------------------------------
         self._unc_data = pd.read_excel(os.path.join(default_location, "UN Codes.xlsx"))
 
-        # import specific columns from the UN Population Dataset 1
+        # fixing incompatible name of "United States of America" in the "UN Codes.xlsx" file
+        self._unc_data.loc[self._unc_data["Country"] == "United States", "Country"] = "United States of America"
+        # ----------------------------------------
+
+
+        # Importing UN Population Dataset 1
+        # ----------------------------------------
         liv_data_raw = pd.read_excel(os.path.join(default_location, "UN Population Dataset 1.xlsx"), usecols="B:E")
 
         # creating temporary dataframe with Series filtered on "Population annual rate of increase (percent)"
@@ -93,20 +107,27 @@ class DataAnalysis:
 
         # join dataframe liv_data_temp and liv_data_expectancy
         self._liv_data = pd.merge(liv_data_temp, liv_data_expectancy, how="inner", on=["Region/Country/Area", "Year"])
+        # ----------------------------------------
 
-        # import specific columns from from the UN Population Dataset 2
+
+        # Importing UN Population Dataset 2
+        # ----------------------------------------
         pop_data_raw = pd.read_excel(os.path.join(default_location, "UN Population Dataset 2.xlsx"), usecols="B:D, F")
 
         # creating dataframe with Series filtered on "Urban population (percent)"
         filter_series = "Urban population (percent)"
         self._pop_data = pop_data_raw[pop_data_raw["Series"] == filter_series].drop("Series", axis=1).rename(columns={"Value": filter_series}).reset_index(drop=True)
+        # ----------------------------------------
 
-        # import specific columns from from the UN GDP Data
+
+        # Importing UN GDP Data
+        # ----------------------------------------
         gdp_data_raw = pd.read_csv(os.path.join(custom_location, "UNGDPData.csv"), usecols=["Region/Country/Area", "Year", "Series", "Value"])
 
         # creating dataframe with Series filtered on "Urban population (percent)"
         filter_series = "GDP per capita (US dollars)"
         self._gdp_data = gdp_data_raw[gdp_data_raw["Series"] == filter_series].drop("Series", axis=1).rename(columns={"Value": filter_series}).reset_index(drop=True)
+        # ----------------------------------------
 
 
 
@@ -259,7 +280,7 @@ class DataAnalysis:
 
 
 
-    def additional_statistics(self):
+    def _additional_statistics(self):
         """
         Method adding two columns to the dataset.
 
@@ -269,14 +290,53 @@ class DataAnalysis:
             Returns:
                 None
         """
-        print("\n" + color.magenta + "Additional columns required are shown in the modified Data Frame below." + color.reset)
-        #Column to compare the Ratio of Urban Population to GDP per Capita
+        # creating IndexSlice object
+        idx = pd.IndexSlice
+
+        # Extra column 1
+        # ----------------------------------------
+        # Adding extra column "Normalized GDP per capita", which is ratio of "GDP per capita (US dollars)" of the country and "GDP per capita (US dollars)" of the "United States of America"
+
+        # get the GDP for United States
+        us_gdp_capita = self._dataset.loc[idx[:, :, "United States of America"], idx["Year", "GDP per capita (US dollars)"]]
+        us_gdp_capita.reset_index(drop=True, inplace=True)
+
+        # get all the different years in the self._dataset for the "United States of America"
+        different_years = self._dataset.loc[idx[:, :, "United States of America"], idx["Year"]]
+
+        # loop to fill the values in the column
+        for y in different_years:
+            # fetch the gdp of US for "Year" = y
+            us_gdp_capita_y = float(us_gdp_capita[us_gdp_capita["Year"] == y]["GDP per capita (US dollars)"])
+
+            # for the "Year" = y, calculate Normalized GDP = GDP per capita / GDP per capita of US
+            self._dataset.loc[idx[self._dataset["Year"] == y], idx["Normalized GDP per capita"]] = self._dataset.loc[idx[self._dataset["Year"] == y], idx["GDP per capita (US dollars)"]] / us_gdp_capita_y
+
+        # printing what column has been added - to make it easy for TAs
+        print("\nAdded column \'Normalized GDP per capita\' to the dataset")
+        # ----------------------------------------
+
+
+        # Extra column 2
+        # ----------------------------------------
+        # Column to compare the Ratio of Urban Population to GDP per Capita
+
         self._dataset.insert(5, "Ratio of Urban Population to GDP per Capita", \
             self._dataset['Urban population (percent)'] / self._dataset['GDP per capita (US dollars)'])
-        #Column to compare the Ratio of Annual Rate of Population Increase to GDP per Capita
+
+        print("Added column \'Ratio of Urban Population to GDP per capita\' to the dataset")
+        # ----------------------------------------
+
+
+        # Extra column 3
+        # ----------------------------------------
+        # Column to compare the Ratio of Annual Rate of Population Increase to GDP per Capita
+
         self._dataset.insert(6, "Ratio of Annual Rate of Population Increase to GDP per Capita", \
             self._dataset['Population annual rate of increase (percent)'] / self._dataset['GDP per capita (US dollars)'])
-        print(self._dataset)
+
+        print("Added column \'Ratio of Annual Rate of Population Increase to GDP per Capita\' to the dataset")
+        # ----------------------------------------
 
 
 

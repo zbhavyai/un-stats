@@ -130,7 +130,7 @@ def program_menu():
 
         elif choice == 5:
             # call function for dataset with Additional Statistics
-            analysis.additional_statistics()
+            # analysis.additional_statistics()
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
         elif choice == 6:
