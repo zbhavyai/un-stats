@@ -43,7 +43,7 @@ def splash_message():
     print("--------------------------")
     print(color.reset, end="")
 
-    # show the splash screen for 1 second and then clear again
+    # show the splash screen for 1.5 second and then clear again
     time.sleep(1.5)
 
     clear_console()
@@ -104,7 +104,7 @@ def program_menu():
             except ValueOutOfRange as e:
                 print("\n" + color.red + str(e) + color.reset)
 
-            except KeyboardInterrupt as e: 
+            except KeyboardInterrupt as e:
                 print("\n\nYou pressed Ctrl+C. Bye!\n")
                 return
 
@@ -137,7 +137,7 @@ def program_menu():
             # call to show plot of Population Increase, Total Fertility Rate and Life Expectancy
             analysis.pivot_plot()
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
-            
+
         else: # choice == 7
             # call function for stats for Fertility and Literacy
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
