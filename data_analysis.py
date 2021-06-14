@@ -2,10 +2,13 @@
 # Authors:     Bhavyai Gupta, Brandon Attai
 # Description: Source code of the class DataAnalysis
 
+from custom_errors import ValueOutOfRange
 import pandas as pd
 import ansi_colors as color
 import time
 import os
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 class DataAnalysis:
@@ -69,7 +72,7 @@ class DataAnalysis:
         # import specific columns from the UN Population Dataset 1
         liv_data_raw = pd.read_excel(os.path.join(default_location, "UN Population Dataset 1.xlsx"), usecols="B:E")
 
-        # creating temporary dataframe with Series filtered on "Population annual rate of increase (percent)"
+        #3 creating temporary dataframe with Series filtered on "Population annual rate of increase (percent)"
         filter_series = "Population annual rate of increase (percent)"
         liv_data_population = liv_data_raw[liv_data_raw["Series"] == filter_series].drop("Series", axis=1).rename(columns={"Value": filter_series})
 
@@ -203,3 +206,112 @@ class DataAnalysis:
         """
         print("\n" + color.magenta + "Aggregate statistics for the entire dataset" + color.reset + "\n")
         print(self._dataset.describe())
+
+    def group_by_stats(self):
+        """
+        Method using the groupby function to show the averages for a specific field 
+        for all Sub-Regions ranging in years for the dataset.
+
+            Parameters:
+                None
+
+            Returns:
+                None
+        """
+        year_analysis = self._dataset['Year']
+        year_analysis = year_analysis.astype(str)
+        year_analysis.name = 'Year'
+        
+        while(True):
+            try:
+                choice = input("\n" + color.magenta + """Please enter the name of the data that you would like to see the average quinquennial stats for.
+                                \nThe options are: """ + color.reset +"""
+                                \n1) """ +self._dataset.columns[1] +"""
+                                \n2) """ +self._dataset.columns[2] +"""
+                                \n3) """ +self._dataset.columns[3] +"""
+                                \n4) """ +self._dataset.columns[4] +"""
+                                \n5) """ + self._dataset.columns[5] + """
+                                \nEnter here: """ + "\n")
+
+                if choice not in self._dataset.columns:
+                    raise ValueOutOfRange("This option is not supported. Please choose a valid menu option")
+                    
+                else:
+                    break
+
+            except ValueError as e:
+                print("\n" + color.red + "Please enter a valid menu option" + color.reset)
+
+            except ValueOutOfRange as e:
+                print("\n" + color.red + str(e) + color.reset)
+
+            except KeyboardInterrupt as e: 
+                print("\n\nYou pressed Ctrl+C. Bye!\n")
+                return
+
+        print(self._dataset.groupby(['UN Sub-Region',year_analysis])[choice].mean().unstack())
+
+
+    def additional_statistics(self):
+        """
+        Method adding two columns to the dataset. 
+
+            Parameters:
+                None
+
+            Returns:
+                None
+        """        
+        
+        print("\n" + color.magenta + "Additional columns required are shown in the modified Data Frame below." + color.reset)
+        #Column to compare the Ratio of Urban Population to GDP per Capita
+        self._dataset.insert(5, "Ratio of Urban Population to GDP per Capita", \
+            self._dataset['Urban population (percent)'] / self._dataset['GDP per capita (US dollars)'])
+        #Column to compare the Ratio of Annual Rate of Population Increase to GDP per Capita
+        self._dataset.insert(6, "Ratio of Annual Rate of Population Increase to GDP per Capita", \
+            self._dataset['Population annual rate of increase (percent)'] / self._dataset['GDP per capita (US dollars)'])
+        print(self._dataset)
+
+    def pivot_plot(self):
+        """
+        Method using pivot table and matplotlib to compare statistics.
+
+            Parameters:
+
+            Returns:
+
+        """    
+        pivot_df = self._dataset.reset_index(level=['Country'])
+        while(True):
+            try:
+                country_choice = input("\n" + color.magenta + "Please enter the Country you would like to compare: "+ color.reset)
+                try:
+                    pivot_df1 = pivot_df.pivot_table('Population annual rate of increase (percent)', index = 'Year', columns= 'Country').loc[:,country_choice]
+                    break
+                except KeyError:
+                    print(color.red + "Invalid country name, please try again!" + color.reset)
+            except KeyError:
+                print(color.red + "Invalid country name, please try again!" + color.reset)
+        
+        # Create multiple pivot tables to be superimposed on the plot.
+        pivot_df2 = pivot_df.pivot_table('Total fertility rate (children per women)', index = 'Year', columns= 'Country').loc[:,country_choice]
+        pivot_df3 = pivot_df.pivot_table('Life expectancy at birth for both sexes (years)', index = 'Year', columns= 'Country').loc[:,country_choice]
+
+        #Superimplose the plots
+        pivot_df1.plot()
+        pivot_df2.plot()
+        pivot_df3.plot()
+        plt.xlabel("Year")
+        plt.ylabel("Value")
+        plt.title("""Comparison of Life Population annual rate of increase (percent) to
+                    \nTotal fertility rate (children per women) to 
+                    \nLife expectancy at birth for both sexes (years)
+                    \nfor Country: {0}""".format(country_choice))
+        plt.legend()
+        plt.show()
+
+
+
+        
+            
+            

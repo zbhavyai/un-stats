@@ -45,6 +45,7 @@ def splash_message():
 
     # show the splash screen for 1 second and then clear again
     time.sleep(1.5)
+
     clear_console()
 
 
@@ -75,9 +76,9 @@ def program_menu():
         print("\n[3] Print aggregate stats for the entire dataset")
 
         # data specific options
-        print("\n[4] Print stats for relation between Life Expectancy and Urbanization")
-        print("\n[5] Print stats for relation between Tertiary Education in all countries")
-        print("\n[6] Print stats for relation between Fertility and Literacy")
+        print("\n[4] Print stats for the averages of a UN Sub-Region ranging in years")
+        print("\n[5] Print stats for Additional Data columns")
+        print("\n[6] Show plot of Population Increase, Total Fertility Rate and Life Expectancy for a country")
         print("\n[7] Print stats for relation between Urbanization and Fertility")
 
         print("\n[0] Exit")
@@ -103,7 +104,7 @@ def program_menu():
             except ValueOutOfRange as e:
                 print("\n" + color.red + str(e) + color.reset)
 
-            except KeyboardInterrupt as e:
+            except KeyboardInterrupt as e: 
                 print("\n\nYou pressed Ctrl+C. Bye!\n")
                 return
 
@@ -123,17 +124,20 @@ def program_menu():
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
         elif choice == 4:
-            # call function for Urbanization and Fertility
+            # call function to show the averages for a specific column for all Sub-Regions ranging in years.
+            analysis.group_by_stats()
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
         elif choice == 5:
-            # call function for stats for Life Expectancy and Urbanization
+            # call function for dataset with Additional Statistics
+            analysis.additional_statistics()
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
 
         elif choice == 6:
-            # call function for stats for Tertiary Education
+            # call to show plot of Population Increase, Total Fertility Rate and Life Expectancy
+            analysis.pivot_plot()
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
-
+            
         else: # choice == 7
             # call function for stats for Fertility and Literacy
             input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
