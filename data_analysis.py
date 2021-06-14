@@ -8,6 +8,7 @@ import ansi_colors as color
 import time
 import os
 import matplotlib.pyplot as plt
+from launch import clear_console
 import seaborn as sns
 
 
@@ -236,8 +237,7 @@ class DataAnalysis:
 
     def group_by_stats(self):
         """
-        Method using the groupby function to show the averages for a specific field
-        for all Sub-Regions ranging in years for the dataset.
+        Method to print the one or several aggregate stats grouped by UN Region/UN Sub-Region ranging in years for the dataset.
 
             Parameters:
                 none
@@ -245,29 +245,20 @@ class DataAnalysis:
             Returns:
                 None
         """
-        year_analysis = self._dataset['Year']
-        year_analysis = year_analysis.astype(str)
-        year_analysis.name = 'Year'
+        clear_console()
+
+        print("\n" + color.yellow + "Sub Menu: Aggregation stats grouped by UN Region/UN Sub-Region" + color.reset)
 
         while(True):
             try:
-                choice = input("\n" + color.magenta + """Please enter the name of the data that you would like to see the average quinquennial stats for.
-                                \nThe options are: """ + color.reset +"""
-                                \n1) """ +self._dataset.columns[1] +"""
-                                \n2) """ +self._dataset.columns[2] +"""
-                                \n3) """ +self._dataset.columns[3] +"""
-                                \n4) """ +self._dataset.columns[4] +"""
-                                \n5) """ + self._dataset.columns[5] + """
-                                \nEnter here: """ + "\n")
+                print("\n" + color.magenta + "[Q1] How do you want to get aggregate stats? By \"UN Region\" or By \"UN Sub-Region\"" + color.reset)
+                choice_region_type = input("\nEnter either \"UN Region\" or \"UN Sub-Region\" (without the quotes): ")
 
-                if choice not in self._dataset.columns:
-                    raise ValueOutOfRange("This option is not supported. Please choose a valid menu option")
-
-                else:
+                if choice_region_type == "UN Region" or choice_region_type == "UN Sub-Region":
                     break
 
-            except ValueError as e:
-                print("\n" + color.red + "Please enter a valid menu option" + color.reset)
+                else:
+                    raise ValueOutOfRange("This option is not supported. Please choose a valid menu option")
 
             except ValueOutOfRange as e:
                 print("\n" + color.red + str(e) + color.reset)
@@ -276,7 +267,66 @@ class DataAnalysis:
                 print("\n\nYou pressed Ctrl+C. Bye!\n")
                 return
 
-        print(self._dataset.groupby(['UN Sub-Region',year_analysis])[choice].mean().unstack())
+        # here we have got choice_region_type
+
+        while(True):
+            try:
+                print("\n" + color.magenta + "[Q2] Which data column you want the aggregate stats for?" + color.reset + "\n\nPlease enter one of the below possible options (dont enter leading hypen):\n")
+
+                for col in range(1, self._dataset.columns.size):
+                    print(" - " + self._dataset.columns[col])
+
+                choice_column = input("\nEnter your choice: ")
+
+                if choice_column not in self._dataset.columns:
+                    raise ValueOutOfRange("This option is not supported. Please choose a valid menu option")
+
+                elif choice_column == "Year":
+                    raise ValueOutOfRange("This option is not supported. Please choose a valid menu option")
+
+                else:
+                    break
+
+            except ValueOutOfRange as e:
+                print("\n" + color.red + str(e) + color.reset)
+
+            except KeyboardInterrupt as e:
+                print("\n\nYou pressed Ctrl+C. Bye!\n")
+                return
+
+        # now we have got choice_region_type and choice_column
+
+        while(True):
+            try:
+                print("\n" + color.magenta + "[Q3] What aggregate stats you want?" + color.reset + "\n\nPlease enter one of the below possible options (dont enter leading hypen):\n")
+
+                available_stat = ["mean", "median", "min", "max", "all"]
+
+                for col in range(0, len(available_stat)):
+                    print(" - " + available_stat[col])
+
+                choice_stat = input("\nEnter your choice: ")
+
+                if choice_stat not in available_stat:
+                    raise ValueOutOfRange("This option is not supported. Please choose a valid menu option")
+
+                elif choice_stat == "all":
+                    # changing to what "all" actually stands for
+                    choice_stat = ["mean", "median", "min", "max"]
+                    break
+
+                else:
+                    break
+
+            except ValueOutOfRange as e:
+                print("\n" + color.red + str(e) + color.reset)
+
+            except KeyboardInterrupt as e:
+                print("\n\nYou pressed Ctrl+C. Bye!\n")
+                return
+
+        # now we have got all three choice_region_type, choice_column, and choice_stat. So running the aggregate
+        print(self._dataset.groupby([choice_region_type, "Year"])[choice_column].aggregate(choice_stat).unstack())
 
 
 

@@ -43,7 +43,7 @@ def splash_message():
     print("--------------------------")
     print(color.reset, end="")
 
-    # show the splash screen for 1.5 second and then clear again
+    # show the splash screen for 1.5 seconds and then clear again
     time.sleep(1.5)
 
     clear_console()
@@ -76,10 +76,10 @@ def program_menu():
         print("\n[3] Print aggregate stats for the entire dataset")
 
         # data specific options
-        print("\n[4] Print stats for the averages of a UN Sub-Region ranging in years")
-        print("\n[5] Print stats for Additional Data columns")
+        print("\n[4] Print aggregation stats grouped by UN Region/UN Sub-Region and available years")
+        # print("\n[5] Print stats for Additional Data columns")
         print("\n[6] Show plot of Population Increase, Total Fertility Rate and Life Expectancy for a country")
-        print("\n[7] Print stats for relation between Urbanization and Fertility")
+        # print("\n[7] Print stats for relation between Urbanization and Fertility")
 
         print("\n[0] Exit")
 
