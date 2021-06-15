@@ -6,3 +6,8 @@
 class ValueOutOfRange(Exception):
     """Raised when user input is out of range"""
     pass
+
+
+class ValueDuplicate(Exception):
+    """Raised when user repeated their input when unique values were required"""
+    pass
