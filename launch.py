@@ -63,7 +63,6 @@ def program_menu():
     # creating object of class DataAnalysis
     analysis = da.DataAnalysis()
 
-
     # loop to keep printing the menu until Exit
     while(True):
         # clear the console everytime menu is printed
@@ -76,9 +75,12 @@ def program_menu():
         print("\n[3] Print aggregate stats for the entire dataset")
 
         # data specific options
-        print("\n[4] Print aggregation stats grouped by UN Region/UN Sub-Region and available years")
-        print("\n[5] Print the list of countries that have higher GDP per capita than USA, and the year")
-        print("\n[6] Show plot of Population Increase, Total Fertility Rate and Life Expectancy for a country")
+        print(
+            "\n[4] Print aggregation stats grouped by UN Region/UN Sub-Region and available years")
+        print(
+            "\n[5] Print the list of countries that have higher GDP per capita than USA, and the year")
+        print(
+            "\n[6] Show plot of Population Increase, Total Fertility Rate and Life Expectancy for a country")
 
         print("\n[0] Exit")
 
@@ -88,7 +90,8 @@ def program_menu():
                 choice = int(input("\nPlease enter the menu option number: "))
 
                 if choice < 0 or choice > 6:
-                    raise ValueOutOfRange("This option is not supported. Please choose a valid menu option")
+                    raise ValueOutOfRange(
+                        "This option is not supported. Please choose a valid menu option")
 
                 elif choice == 0:
                     print("\nBye!\n")
@@ -98,7 +101,8 @@ def program_menu():
                     break
 
             except ValueError as e:
-                print("\n" + color.red + "Please enter a valid menu option" + color.reset)
+                print("\n" + color.red +
+                      "Please enter a valid menu option" + color.reset)
 
             except ValueOutOfRange as e:
                 print("\n" + color.red + str(e) + color.reset)
@@ -107,29 +111,34 @@ def program_menu():
 
         if choice == 1:
             analysis.print_imported_dataframes()
-            input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
+            input("\n" + color.blue +
+                  "Press enter to return to the menu " + color.reset)
 
         elif choice == 2:
             analysis.export_dataset()
-            input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
+            input("\n" + color.blue +
+                  "Press enter to return to the menu " + color.reset)
 
         elif choice == 3:
             analysis.print_aggregate_stats()
-            input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
+            input("\n" + color.blue +
+                  "Press enter to return to the menu " + color.reset)
 
         elif choice == 4:
             analysis.group_by_stats()
-            input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
+            input("\n" + color.blue +
+                  "Press enter to return to the menu " + color.reset)
 
         elif choice == 5:
             analysis.higher_gdp_than_usa()
-            input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
+            input("\n" + color.blue +
+                  "Press enter to return to the menu " + color.reset)
 
-        else: # choice == 6:
+        else:  # choice == 6:
             # analysis.pivot_plot()
             analysis.alt_pivot_plot()
-            input("\n" + color.blue + "Press enter to return to the menu " + color.reset)
-
+            input("\n" + color.blue +
+                  "Press enter to return to the menu " + color.reset)
 
 
 if __name__ == '__main__':
