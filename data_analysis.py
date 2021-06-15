@@ -33,23 +33,22 @@ class DataAnalysis:
         _dataset
 
     Methods:
-        _import_data(default_location, custom_location): Method to import the known files from the relative locations in the project directory
-        _merge_data(): Method to merge the data from different dataframes into one dataframe
-        _additional_statistics(): Method to add additional columns to the dataframe
-        _check_null(): Method to check null values in the dataframe.
-        export_dataset(): Method to export the entire merged hierarchical dataframe into Excel file
-        print_imported_dataframes(): Method to print dataframes imported from Excel or CSV
-        print_aggregate_stats(): Method to print aggregate stats for the entire dataset
-        group_by_stats(): Method to print the one or several aggregate stats grouped by UN Region/UN Sub-Region ranging in years for the dataframe.
-        higher_gdp_than_usa(): Method to list countries having GDP per capita than the USA
-        pivot_plot(): Method to plot graphs on Population Rate, Fertility Rate, Life Expectancy, and Urban Population
-        for four different countries
+        _import_data():                 Method to import the known files from the relative locations in the project directory
+        _merge_data():                  Method to merge the data from different dataframes into one dataframe
+        _additional_statistics():       Method to add additional columns to the dataframe
+        _check_null():                  Method to check null values in the dataframe.
+        export_dataset():               Method to export the entire merged hierarchical dataframe into Excel file
+        print_imported_dataframes():    Method to print dataframes imported from Excel or CSV
+        print_aggregate_stats():        Method to print aggregate stats for the entire dataset
+        group_by_stats():               Method to print aggregate stats grouped by UN Region/UN Sub-Region
+        higher_gdp_than_usa():          Method to list countries having GDP per capita than the USA
+        pivot_plot():                   Method to plot graphs on for four different countries on various aspects
     """
 
     def __init__(self):
         print("\n" + color.yellow +
               "Please wait while the program initializes..." + color.reset)
-        time.sleep(2)
+        time.sleep(1.5)
         print("\n[Step 1/5] Importing data from excel and csv files")
         self._import_data("UN Population Datasets", "CustomUNData")
         print("[Step 1/5] " + color.green + "complete" + color.reset)
@@ -113,13 +112,33 @@ class DataAnalysis:
         liv_data_expectancy = liv_data_raw[liv_data_raw["Series"] == filter_series].drop(
             "Series", axis=1).rename(columns={"Value": filter_series})
 
+        # creating temporary dataframe with Series filtered on "Life expectancy at birth for males (years)"
+        filter_series = "Life expectancy at birth for males (years)"
+        liv_data_expectancy_males = liv_data_raw[liv_data_raw["Series"] == filter_series].drop(
+            "Series", axis=1).rename(columns={"Value": filter_series})
+
+        # creating temporary dataframe with Series filtered on "Life expectancy at birth for females (years)"
+        filter_series = "Life expectancy at birth for females (years)"
+        liv_data_expectancy_females = liv_data_raw[liv_data_raw["Series"] == filter_series].drop(
+            "Series", axis=1).rename(columns={"Value": filter_series})
+
         # join dataframe liv_data_population and liv_data_fertility
         liv_data_temp = pd.merge(liv_data_population, liv_data_fertility, how="inner", on=[
+                                 "Region/Country/Area", "Year"])
+
+        # join dataframe liv_data_temp and liv_data_expectancy_males
+        liv_data_temp = pd.merge(liv_data_temp, liv_data_expectancy_males, how="inner", on=[
+                                 "Region/Country/Area", "Year"])
+
+        # join dataframe liv_data_temp and liv_data_expectancy_females
+        liv_data_temp = pd.merge(liv_data_temp, liv_data_expectancy_females, how="inner", on=[
                                  "Region/Country/Area", "Year"])
 
         # join dataframe liv_data_temp and liv_data_expectancy
         self._liv_data = pd.merge(liv_data_temp, liv_data_expectancy, how="inner", on=[
                                   "Region/Country/Area", "Year"])
+
+        self._liv_data.to_excel("living_data.xlsx")
         # ----------------------------------------
 
         # Importing UN Population Dataset 2
@@ -221,7 +240,7 @@ class DataAnalysis:
         # ----------------------------------------
         # Column to compare the Ratio of Urban Population to GDP per Capita
 
-        self._dataset.insert(5, "Ratio of Urban Population to GDP per Capita",
+        self._dataset.insert(8, "Ratio of Urban Population to GDP per Capita",
                              self._dataset['Urban population (percent)'] / self._dataset['GDP per capita (US dollars)'])
 
         print("Added column \'Ratio of Urban Population to GDP per capita\' to the dataset")
@@ -231,7 +250,7 @@ class DataAnalysis:
         # ----------------------------------------
         # Column to compare the Ratio of Annual Rate of Population Increase to GDP per Capita
 
-        self._dataset.insert(6, "Ratio of Annual Rate of Population Increase to GDP per Capita",
+        self._dataset.insert(9, "Ratio of Annual Rate of Population Increase to GDP per Capita",
                              self._dataset['Population annual rate of increase (percent)'] / self._dataset['GDP per capita (US dollars)'])
 
         print("Added column \'Ratio of Annual Rate of Population Increase to GDP per Capita\' to the dataset")
@@ -391,6 +410,7 @@ class DataAnalysis:
                 print("\n" + color.red + str(e) + color.reset)
 
         # now we have got all three choice_region_type, choice_column, and choice_stat. So running the aggregate
+
         print("\n" + color.green +
               "Here are the requested stats" + color.reset + "\n")
         print(self._dataset.groupby([choice_region_type, "Year"])[
