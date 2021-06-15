@@ -3,6 +3,7 @@
 # Description: Source code of the class DataAnalysis providing methods and attributes for analysis of dataframes
 
 from custom_errors import ValueOutOfRange
+from custom_errors import ValueDuplicate
 import pandas as pd
 import ansi_colors as color
 import time
@@ -41,7 +42,9 @@ class DataAnalysis:
         print_aggregate_stats(): Method to print aggregate stats for the entire dataset
         group_by_stats(): Method to print the one or several aggregate stats grouped by UN Region/UN Sub-Region ranging in years for the dataframe.
         higher_gdp_than_usa(): Method to list countries having GDP per capita than the USA
-        pivot_plot()
+        pivot_plot(): Method using pivot table and matplotlib to compare statistics
+        alt_pivot_plot(): Method to plot graphs on Population Rate, Fertility Rate, Life Expectancy, and Urban Population
+        for four different countries
     """
 
     def __init__(self):
@@ -269,16 +272,16 @@ class DataAnalysis:
             Returns:
                 None
         """
-        print("\n\n" + color.magenta + "UN Codes dataframe" + color.reset + "\n")
+        print("\n\n" + color.green + "UN Codes dataframe" + color.reset + "\n")
         print(self._unc_data)
 
-        print("\n\n" + color.magenta + "UN Life Expectancy and Fertility dataframe" + color.reset + "\n")
+        print("\n\n" + color.green + "UN Life Expectancy and Fertility dataframe" + color.reset + "\n")
         print(self._liv_data)
 
-        print("\n\n" + color.magenta + "UN Urban Population dataframe" + color.reset + "\n")
+        print("\n\n" + color.green + "UN Urban Population dataframe" + color.reset + "\n")
         print(self._pop_data)
 
-        print("\n\n" + color.magenta + "UN Gross Domestic Product dataframe" + color.reset + "\n")
+        print("\n\n" + color.green + "UN Gross Domestic Product dataframe" + color.reset + "\n")
         print(self._gdp_data)
 
 
@@ -293,7 +296,7 @@ class DataAnalysis:
             Returns:
                 None
         """
-        print("\n" + color.magenta + "Aggregate statistics for the entire dataset" + color.reset + "\n")
+        print("\n" + color.green + "Aggregate statistics for the entire dataset" + color.reset + "\n")
         print(self._dataset.describe())
 
 
@@ -393,7 +396,7 @@ class DataAnalysis:
         """
         higher_gdp = self._dataset[self._dataset["GDP per capita wrt USA"] > 1].reset_index()
 
-        print("\n" + color.magenta + "Showing list of countries that have had higher GDP per capita than USA and in what year" + color.reset + "\n")
+        print("\n" + color.green + "Showing list of countries that have had higher GDP per capita than USA and in what year" + color.reset + "\n")
         higher_gdp = higher_gdp[["Country", "Year"]].sort_values(by=["Country", "Year"])
         print(higher_gdp.to_string(index=False))
 
@@ -437,3 +440,117 @@ class DataAnalysis:
                     \nfor Country: {0}""".format(country_choice))
         plt.legend()
         plt.show()
+
+
+    def alt_pivot_plot(self):
+        """
+        Method to plot graphs on Population Rate, Fertility Rate, Life Expectancy, and Urban Population
+        for four different countries
+
+            Parameters:
+                none
+
+            Returns:
+                None
+        """
+        clear_console()
+
+        print("\n" + color.yellow + "Sub Menu: Plotting graphs using pivot table" + color.reset)
+        print("\nWe will print compare four countries on the basis of -")
+        print(" - Population annual rate of increase (percent)")
+        print(" - Total fertility rate (children per women)")
+        print(" - Life expectancy at birth for both sexes (years)")
+        print(" - Urban population (percent)")
+
+        print("\n" + color.magenta + "Please enter four unique countries, one at a time. eg. United States of America" + color.reset + "\n")
+        countries = []
+
+        for i in range(0, 4):
+            while(True):
+                try:
+                    choice_country = input("Enter country " + str(i+1) + " : ")
+
+                    # if its a valid country
+                    if(choice_country in self._dataset.index.get_level_values(2).values):
+                        # now check if its not already added
+                        if(choice_country not in countries):
+                            countries.append(choice_country)
+                            i = i + 1
+                            break
+
+                        # oops, user tried to re-enter a country
+                        else:
+                            raise ValueDuplicate("You have already entered this country. Please enter a different country")
+
+                    # if its an invalid country
+                    else:
+                        raise ValueOutOfRange("This is not a valid country. Please enter a valid country")
+
+                except ValueOutOfRange as e:
+                    print("\n" + color.red + str(e) + color.reset + "\n")
+
+                except ValueDuplicate as e:
+                    print("\n" + color.red + str(e) + color.reset + "\n")
+
+
+        # now we have got four different countries, lets plot the graphs
+
+        # creating IndexSlice object
+        idx = pd.IndexSlice
+
+        # get a subset of dataframe with only four countries and required columns
+        subset = self._dataset.loc[idx[:, :, countries, idx[:]]]
+
+        # choose only the required columns from the subset
+        subset = subset.loc[idx[:], idx["Year", "Population annual rate of increase (percent)", "Total fertility rate (children per women)", "Life expectancy at birth for both sexes (years)", "Urban population (percent)"]]
+
+        # creating pivot table
+        pivot_data = subset.pivot_table(index="Year", columns="Country")
+
+        # printing pivot table
+        print("\n" + color.green + "Pivot table for the above countries" + color.reset)
+        print(pivot_data)
+
+        # creating plots
+        fig = plt.figure(1)
+        fig.set_size_inches(20, 10)
+        fig.suptitle("Comparison of countries")
+
+        (axs0, axs1) = fig.subplots(2, 2)
+
+        # plot for Population annual rate of increase (percent)
+        axs0[0].set_title("Population annual rate of increase (percent)")
+        axs0[0].set(xlabel="Year", ylabel="Percentage")
+        axs0[0].plot(pivot_data.loc[:, idx["Population annual rate of increase (percent)"]])
+        axs0[0].legend(countries, loc="upper right")
+
+        # plot for Total fertility rate (children per women)
+        axs0[1].set_title("Total fertility rate (children per women)")
+        axs0[1].set(xlabel="Year", ylabel="Children per women")
+        axs0[1].plot(pivot_data.loc[:, idx["Total fertility rate (children per women)"]])
+        axs0[1].legend(countries, loc="upper right")
+
+        # plot for Life expectancy at birth for both sexes (years)
+        axs1[0].set_title("Life expectancy at birth for both sexes (years)")
+        axs1[0].set(xlabel="Year", ylabel="Years")
+        axs1[0].plot(pivot_data.loc[:, idx["Life expectancy at birth for both sexes (years)"]])
+        axs1[0].legend(countries, loc="upper right")
+
+        # plot for Urban population (percent)
+        axs1[1].set_title("Urban population (percent)")
+        axs1[1].set(xlabel="Year", ylabel="Percentage")
+        axs1[1].plot(pivot_data.loc[:, idx["Urban population (percent)"]])
+        axs1[1].legend(countries, loc="upper right")
+
+        # save the plot in project directory
+        fig.savefig("Plot_Comparison.png", dpi=100)
+        print("\n\nPlot saved as \'Plot_Comparison.png\'")
+
+        show_now = input("\n" + color.magenta + "Do you want see the plot now? Enter y/Y for yes: " + color.reset)
+
+        if(show_now == "y" or show_now == "Y"):
+            plt.show()
+            return
+
+        else:
+            return
