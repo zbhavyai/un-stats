@@ -546,8 +546,8 @@ class DataAnalysis:
         axs1[1].legend(countries, loc="upper right")
 
         # save the plot in project directory
-        fig.savefig("Plot_Comparison.png", dpi=100)
-        print("\n\nPlot saved as \'Plot_Comparison.png\'")
+        fig.savefig("Plots.png", dpi=100)
+        print("\n\nPlot saved as \'Plots.png\'")
 
         show_now = input("\n" + color.magenta + "Do you want see the plot now? Enter y/Y for yes: " + color.reset)
 
