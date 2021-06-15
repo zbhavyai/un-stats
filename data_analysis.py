@@ -194,14 +194,15 @@ class DataAnalysis:
         # ----------------------------------------
         # Adding extra column "GDP per capita wrt USA", which is ratio of "GDP per capita (US dollars)" of the country and "GDP per capita (US dollars)" of the "United States of America"
 
+        usa = "United States of America"
+
         # get the GDP for United States
-        us_gdp_capita = self._dataset.loc[idx[:, :, "United States of America"],
+        us_gdp_capita = self._dataset.loc[idx[:, :, usa],
                                           idx["Year", "GDP per capita (US dollars)"]]
         us_gdp_capita.reset_index(drop=True, inplace=True)
 
         # get all the different years in the self._dataset for the "United States of America"
-        different_years = self._dataset.loc[idx[:, :,
-                                                "United States of America"], idx["Year"]]
+        different_years = self._dataset.loc[idx[:, :, usa], idx["Year"]]
 
         # loop to fill the values in the column
         for y in different_years:
@@ -391,7 +392,7 @@ class DataAnalysis:
                 print("\n" + color.red + str(e) + color.reset)
 
         # now we have got all three choice_region_type, choice_column, and choice_stat. So running the aggregate
-        print("\n" + color.green + "Here are the requested stats" + color.reset)
+        print("\n" + color.green + "Here are the requested stats" + color.reset + "\n")
         print(self._dataset.groupby([choice_region_type, "Year"])[
               choice_column].aggregate(choice_stat).unstack())
 
@@ -534,7 +535,7 @@ class DataAnalysis:
 
         # printing pivot table
         print("\n" + color.green +
-              "Pivot table for the above countries" + color.reset)
+              "Pivot table for the above countries" + color.reset + "\n")
         print(pivot_data)
 
         # creating plots
