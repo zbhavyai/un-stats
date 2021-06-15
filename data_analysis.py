@@ -1,6 +1,6 @@
 # File:        data_analysis.py
 # Authors:     Bhavyai Gupta, Brandon Attai
-# Description: Source code of the class DataAnalysis
+# Description: Source code of the class DataAnalysis providing methods and attributes for analysis of dataframes
 
 from custom_errors import ValueOutOfRange
 import pandas as pd
@@ -19,8 +19,8 @@ class DataAnalysis:
     Constructor:
         The constructor performs the following functions -
         - imports the data from Excel/CSV files into panda dataframes
-        - merges the data together into one dataframe
-        - indexes the dataframe and sorts depending on the index
+        - merges the data together into one dataframe, indexes it, and sorts the indexes
+        - add additional columns into the dataframe
         - checks the null values and data mismatches
         - exports the entire merged hierarchical dataset into excel
 
@@ -32,13 +32,15 @@ class DataAnalysis:
         _dataset
 
     Methods:
-        _import_data(default_location, custom_location)
-        print_imported_dataframes()
-        _merge_data()
-        export_dataset()
-        check_null()
-        print_aggregate_stats()
-        additional_statistics()
+        _import_data(default_location, custom_location): Method to import the known files from the relative locations in the project directory
+        _merge_data(): Method to merge the data from different dataframes into one dataframe
+        _additional_statistics(): Method to add additional columns to the dataframe
+        _check_null(): Method to check null values in the dataframe.
+        export_dataset(): Method to export the entire merged hierarchical dataframe into Excel file
+        print_imported_dataframes(): Method to print dataframes imported from Excel or CSV
+        print_aggregate_stats(): Method to print aggregate stats for the entire dataset
+        group_by_stats(): Method to print the one or several aggregate stats grouped by UN Region/UN Sub-Region ranging in years for the dataframe.
+        higher_gdp_than_usa(): Method to list countries having GDP per capita than the USA
         pivot_plot()
     """
 
@@ -58,7 +60,7 @@ class DataAnalysis:
         print("\n[Step 3/5] " + color.green + "complete" + color.reset)
 
         print("\n[Step 4/5] Checking null values\n")
-        self.check_null()
+        self._check_null()
         print("\n[Step 4/5] " + color.green + "complete" + color.reset)
 
         print("\n[Step 5/5] Exporting entire merged hierarchical dataset into excel")
@@ -70,10 +72,11 @@ class DataAnalysis:
 
     def _import_data(self, default_location, custom_location):
         """
-        Method to import the known files from the relation location in the project directory
+        Method to import the known files from the relative locations in the project directory
 
             Parameters:
-                location (str): relative path where the data is stored
+                default_location (str): relative path to location of provided files
+                custom_location (str): relative path to location of additional files
 
             Returns:
                 None
@@ -132,30 +135,6 @@ class DataAnalysis:
 
 
 
-    def print_imported_dataframes(self):
-        """
-        Method to print the imported data from Excel or CSV
-
-            Parameters:
-                none
-
-            Returns:
-                None
-        """
-        print("\n\n" + color.magenta + "UN Codes dataframe" + color.reset + "\n")
-        print(self._unc_data)
-
-        print("\n\n" + color.magenta + "UN Life Expectancy and Fertility dataframe" + color.reset + "\n")
-        print(self._liv_data)
-
-        print("\n\n" + color.magenta + "UN Urban Population dataframe" + color.reset + "\n")
-        print(self._pop_data)
-
-        print("\n\n" + color.magenta + "UN Gross Domestic Product dataframe" + color.reset + "\n")
-        print(self._gdp_data)
-
-
-
     def _merge_data(self):
         """
         Method to merge the data from different dataframes into one dataframe
@@ -186,162 +165,9 @@ class DataAnalysis:
 
 
 
-    def export_dataset(self):
-        """
-        Method to export the entire merged hierarchical dataframe into Excel files with default filename
-
-            Parameters:
-                none
-
-            Returns:
-                None
-        """
-        try:
-            self._dataset.to_excel("Export UN Data.xlsx", index = True, header = True)
-            print("File \'Export UN Data.xlsx\' created")
-
-        except Exception as e:
-            print("\n" + color.red + "An exception occurred during export. Please check the below message and try again" + color.reset + "\n")
-            print(e)
-
-
-
-    def check_null(self):
-        """
-        Method to check null values in the dataset.
-
-            Parameters:
-                none
-
-            Returns:
-                None
-        """
-        print(self._dataset.isnull().any())
-
-
-
-    def print_aggregate_stats(self):
-        """
-        Method to print aggregate stats for the entire dataset
-
-            Parameters:
-                none
-
-            Returns:
-                None
-        """
-        print("\n" + color.magenta + "Aggregate statistics for the entire dataset" + color.reset + "\n")
-        print(self._dataset.describe())
-
-
-
-    def group_by_stats(self):
-        """
-        Method to print the one or several aggregate stats grouped by UN Region/UN Sub-Region ranging in years for the dataset.
-
-            Parameters:
-                none
-
-            Returns:
-                None
-        """
-        clear_console()
-
-        print("\n" + color.yellow + "Sub Menu: Aggregation stats grouped by UN Region/UN Sub-Region" + color.reset)
-
-        while(True):
-            try:
-                print("\n" + color.magenta + "[Q1] How do you want to get aggregate stats? By \"UN Region\" or By \"UN Sub-Region\"" + color.reset)
-                choice_region_type = input("\nEnter either \"UN Region\" or \"UN Sub-Region\" (without the quotes): ")
-
-                if choice_region_type == "UN Region" or choice_region_type == "UN Sub-Region":
-                    break
-
-                else:
-                    raise ValueOutOfRange("This option is not supported. Please choose a valid menu option")
-
-            except ValueOutOfRange as e:
-                print("\n" + color.red + str(e) + color.reset)
-
-        # here we have got choice_region_type
-
-        while(True):
-            try:
-                print("\n" + color.magenta + "[Q2] Which data column you want the aggregate stats for?" + color.reset + "\n\nPlease enter one of the below possible options (dont enter leading hypen):\n")
-
-                for col in range(1, self._dataset.columns.size):
-                    print(" - " + self._dataset.columns[col])
-
-                choice_column = input("\nEnter your choice: ")
-
-                if choice_column not in self._dataset.columns:
-                    raise ValueOutOfRange("This option is not supported. Please choose a valid menu option")
-
-                elif choice_column == "Year":
-                    raise ValueOutOfRange("This option is not supported. Please choose a valid menu option")
-
-                else:
-                    break
-
-            except ValueOutOfRange as e:
-                print("\n" + color.red + str(e) + color.reset)
-
-        # now we have got choice_region_type and choice_column
-
-        while(True):
-            try:
-                print("\n" + color.magenta + "[Q3] What aggregate stats you want?" + color.reset + "\n\nPlease enter one of the below possible options (dont enter leading hypen):\n")
-
-                available_stat = ["mean", "median", "min", "max", "all"]
-
-                for col in range(0, len(available_stat)):
-                    print(" - " + available_stat[col])
-
-                choice_stat = input("\nEnter your choice: ")
-
-                if choice_stat not in available_stat:
-                    raise ValueOutOfRange("This option is not supported. Please choose a valid menu option")
-
-                elif choice_stat == "all":
-                    # changing to what "all" actually stands for
-                    choice_stat = ["mean", "median", "min", "max"]
-                    break
-
-                else:
-                    break
-
-            except ValueOutOfRange as e:
-                print("\n" + color.red + str(e) + color.reset)
-
-        # now we have got all three choice_region_type, choice_column, and choice_stat. So running the aggregate
-        print("\n" + color.green + "Here are the requested stats" + color.reset)
-        print(self._dataset.groupby([choice_region_type, "Year"])[choice_column].aggregate(choice_stat).unstack())
-
-
-
-    def higher_gdp_than_usa(self):
-        """
-        Method to show use of additional column "GDP per capita wrt USA". This method lists the
-        countries that have had higher GDP per capita than the USA, and the years in which
-        the said figure was higher
-
-            Parameters:
-                none
-
-            Returns:
-                None
-        """
-        higher_gdp = self._dataset[self._dataset["GDP per capita wrt USA"] > 1].reset_index()
-
-        print("\n" + color.magenta + "Showing list of countries that have had higher GDP per capita than USA and in what year" + color.reset + "\n")
-        higher_gdp = higher_gdp[["Country", "Year"]].sort_values(by=["Country", "Year"])
-        print(higher_gdp.to_string(index=False))
-
-
-
     def _additional_statistics(self):
         """
-        Method adding two columns to the dataset.
+        Method to add additional columns to the dataframe
 
             Parameters:
                 none
@@ -396,6 +222,180 @@ class DataAnalysis:
 
         print("Added column \'Ratio of Annual Rate of Population Increase to GDP per Capita\' to the dataset")
         # ----------------------------------------
+
+
+
+    def _check_null(self):
+        """
+        Method to check null values in the dataframe.
+
+            Parameters:
+                none
+
+            Returns:
+                None
+        """
+        print(self._dataset.isnull().any())
+
+
+
+    def export_dataset(self):
+        """
+        Method to export the entire merged hierarchical dataframe into Excel files with default filename
+
+            Parameters:
+                none
+
+            Returns:
+                None
+        """
+        try:
+            self._dataset.to_excel("Export UN Data.xlsx", index = True, header = True)
+            print("File \'Export UN Data.xlsx\' created")
+
+        except Exception as e:
+            print("\n" + color.red + "An exception occurred during export. Please check the below message and try again" + color.reset + "\n")
+            print(e)
+
+
+
+    def print_imported_dataframes(self):
+        """
+        Method to print dataframes imported from Excel or CSV
+
+            Parameters:
+                none
+
+            Returns:
+                None
+        """
+        print("\n\n" + color.magenta + "UN Codes dataframe" + color.reset + "\n")
+        print(self._unc_data)
+
+        print("\n\n" + color.magenta + "UN Life Expectancy and Fertility dataframe" + color.reset + "\n")
+        print(self._liv_data)
+
+        print("\n\n" + color.magenta + "UN Urban Population dataframe" + color.reset + "\n")
+        print(self._pop_data)
+
+        print("\n\n" + color.magenta + "UN Gross Domestic Product dataframe" + color.reset + "\n")
+        print(self._gdp_data)
+
+
+
+    def print_aggregate_stats(self):
+        """
+        Method to print aggregate stats for the entire dataset
+
+            Parameters:
+                none
+
+            Returns:
+                None
+        """
+        print("\n" + color.magenta + "Aggregate statistics for the entire dataset" + color.reset + "\n")
+        print(self._dataset.describe())
+
+
+
+    def group_by_stats(self):
+        """
+        Method to print the one or several aggregate stats grouped by UN Region/UN Sub-Region ranging in years for the dataframe.
+
+            Parameters:
+                none
+
+            Returns:
+                None
+        """
+        clear_console()
+
+        print("\n" + color.yellow + "Sub Menu: Aggregation stats grouped by UN Region/UN Sub-Region" + color.reset)
+
+        while(True):
+            try:
+                print("\n" + color.magenta + "[Q1] How do you want to get aggregate stats? By \"UN Region\" or By \"UN Sub-Region\"" + color.reset)
+                choice_region_type = input("\nEnter either \"UN Region\" or \"UN Sub-Region\" (without the quotes): ")
+
+                if choice_region_type == "UN Region" or choice_region_type == "UN Sub-Region":
+                    break
+
+                else:
+                    raise ValueOutOfRange("This option is not supported. Please choose a valid menu option")
+
+            except ValueOutOfRange as e:
+                print("\n" + color.red + str(e) + color.reset)
+
+        # here we have got choice_region_type
+
+        while(True):
+            try:
+                print("\n" + color.magenta + "[Q2] Which data column you want the aggregate stats for?" + color.reset + "\n\nPlease enter one of the below possible options (dont enter leading hypen):\n")
+
+                for col in range(1, self._dataset.columns.size):
+                    print(" - " + self._dataset.columns[col])
+
+                choice_column = input("\nEnter your choice: ")
+
+                if choice_column in self._dataset.columns and choice_column != "Year":
+                    break
+
+                else:
+                    raise ValueOutOfRange("This option is not supported. Please choose a valid menu option")
+
+            except ValueOutOfRange as e:
+                print("\n" + color.red + str(e) + color.reset)
+
+        # now we have got choice_region_type and choice_column
+
+        while(True):
+            try:
+                print("\n" + color.magenta + "[Q3] What aggregate stats you want?" + color.reset + "\n\nPlease enter one of the below possible options (dont enter leading hypen):\n")
+
+                available_stat = ["mean", "median", "min", "max", "all"]
+
+                for col in range(0, len(available_stat)):
+                    print(" - " + available_stat[col])
+
+                choice_stat = input("\nEnter your choice: ")
+
+                if choice_stat not in available_stat:
+                    raise ValueOutOfRange("This option is not supported. Please choose a valid menu option")
+
+                elif choice_stat == "all":
+                    # changing to what "all" actually stands for
+                    choice_stat = ["mean", "median", "min", "max"]
+                    break
+
+                else:
+                    break
+
+            except ValueOutOfRange as e:
+                print("\n" + color.red + str(e) + color.reset)
+
+        # now we have got all three choice_region_type, choice_column, and choice_stat. So running the aggregate
+        print("\n" + color.green + "Here are the requested stats" + color.reset)
+        print(self._dataset.groupby([choice_region_type, "Year"])[choice_column].aggregate(choice_stat).unstack())
+
+
+
+    def higher_gdp_than_usa(self):
+        """
+        Method to show use of additional column "GDP per capita wrt USA". This method lists the
+        countries that have had higher GDP per capita than the USA, and the years in which
+        the said figure was higher
+
+            Parameters:
+                none
+
+            Returns:
+                None
+        """
+        higher_gdp = self._dataset[self._dataset["GDP per capita wrt USA"] > 1].reset_index()
+
+        print("\n" + color.magenta + "Showing list of countries that have had higher GDP per capita than USA and in what year" + color.reset + "\n")
+        higher_gdp = higher_gdp[["Country", "Year"]].sort_values(by=["Country", "Year"])
+        print(higher_gdp.to_string(index=False))
 
 
 

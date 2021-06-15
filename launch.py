@@ -1,6 +1,6 @@
 # File:        launch.py
 # Authors:     Bhavyai Gupta, Brandon Attai
-# Description: Source Code to display the menu for the Project
+# Description: Source Code to control the execution flow for the Project
 
 import ansi_colors as color
 from custom_errors import ValueOutOfRange
