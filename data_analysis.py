@@ -493,6 +493,9 @@ class DataAnalysis:
                     print("\n" + color.red + str(e) + color.reset + "\n")
 
 
+        # sort the list countries
+        countries.sort()
+
         # now we have got four different countries, lets plot the graphs
 
         # creating IndexSlice object
