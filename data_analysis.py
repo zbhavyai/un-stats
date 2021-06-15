@@ -10,7 +10,6 @@ import time
 import os
 import matplotlib.pyplot as plt
 from launch import clear_console
-import seaborn as sns
 
 
 class DataAnalysis:
@@ -514,9 +513,10 @@ class DataAnalysis:
         print(pivot_data)
 
         # creating plots
+        # plt.style.use('classic')      # not using custom style
         fig = plt.figure(1)
         fig.set_size_inches(20, 10)
-        fig.suptitle("Comparison of countries")
+        fig.suptitle("Comparison of countries on various aspects")
 
         (axs0, axs1) = fig.subplots(2, 2)
 
