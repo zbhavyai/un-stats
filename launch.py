@@ -135,8 +135,7 @@ def program_menu():
                   "Press enter to return to the menu " + color.reset)
 
         else:  # choice == 6:
-            # analysis.pivot_plot()
-            analysis.alt_pivot_plot()
+            analysis.pivot_plot()
             input("\n" + color.blue +
                   "Press enter to return to the menu " + color.reset)
 

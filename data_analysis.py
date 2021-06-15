@@ -42,8 +42,7 @@ class DataAnalysis:
         print_aggregate_stats(): Method to print aggregate stats for the entire dataset
         group_by_stats(): Method to print the one or several aggregate stats grouped by UN Region/UN Sub-Region ranging in years for the dataframe.
         higher_gdp_than_usa(): Method to list countries having GDP per capita than the USA
-        pivot_plot(): Method using pivot table and matplotlib to compare statistics
-        alt_pivot_plot(): Method to plot graphs on Population Rate, Fertility Rate, Life Expectancy, and Urban Population
+        pivot_plot(): Method to plot graphs on Population Rate, Fertility Rate, Life Expectancy, and Urban Population
         for four different countries
     """
 
@@ -392,7 +391,8 @@ class DataAnalysis:
                 print("\n" + color.red + str(e) + color.reset)
 
         # now we have got all three choice_region_type, choice_column, and choice_stat. So running the aggregate
-        print("\n" + color.green + "Here are the requested stats" + color.reset + "\n")
+        print("\n" + color.green +
+              "Here are the requested stats" + color.reset + "\n")
         print(self._dataset.groupby([choice_region_type, "Year"])[
               choice_column].aggregate(choice_stat).unstack())
 
@@ -417,51 +417,6 @@ class DataAnalysis:
         print(higher_gdp.to_string(index=False))
 
     def pivot_plot(self):
-        """
-        Method using pivot table and matplotlib to compare statistics.
-
-            Parameters:
-                none
-
-            Returns:
-                None
-        """
-        pivot_df = self._dataset.reset_index(level=['Country'])
-        while(True):
-            try:
-                country_choice = input(
-                    "\n" + color.magenta + "Please enter the Country you would like to compare: " + color.reset)
-                try:
-                    pivot_df1 = pivot_df.pivot_table(
-                        'Population annual rate of increase (percent)', index='Year', columns='Country').loc[:, country_choice]
-                    break
-                except KeyError:
-                    print(
-                        color.red + "Invalid country name, please try again!" + color.reset)
-            except KeyError:
-                print(color.red +
-                      "Invalid country name, please try again!" + color.reset)
-
-        # Create multiple pivot tables to be superimposed on the plot.
-        pivot_df2 = pivot_df.pivot_table(
-            'Total fertility rate (children per women)', index='Year', columns='Country').loc[:, country_choice]
-        pivot_df3 = pivot_df.pivot_table(
-            'Life expectancy at birth for both sexes (years)', index='Year', columns='Country').loc[:, country_choice]
-
-        # Superimplose the plots
-        pivot_df1.plot()
-        pivot_df2.plot()
-        pivot_df3.plot()
-        plt.xlabel("Year")
-        plt.ylabel("Value")
-        plt.title("""Comparison of Life Population annual rate of increase (percent) to
-                    \nTotal fertility rate (children per women) to
-                    \nLife expectancy at birth for both sexes (years)
-                    \nfor Country: {0}""".format(country_choice))
-        plt.legend()
-        plt.show()
-
-    def alt_pivot_plot(self):
         """
         Method to plot graphs on Population Rate, Fertility Rate, Life Expectancy, and Urban Population
         for four different countries
