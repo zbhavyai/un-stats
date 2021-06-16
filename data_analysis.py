@@ -262,6 +262,9 @@ class DataAnalysis:
         print("Added column \'Ratio of Annual Rate of Population Increase to GDP per Capita\' to the dataset")
         # ----------------------------------------
 
+        # dropping the null values which may arise after adding column 1
+        self._dataset.dropna(inplace=True)
+
 
 
     def _check_null(self):
