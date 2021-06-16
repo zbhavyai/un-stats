@@ -38,9 +38,9 @@ def splash_message():
     clear_console()
 
     print(color.magenta)
-    print("--------------------------")
-    print(" Welcome to UN Statistics")
-    print("--------------------------")
+    print("----------------------------------------------")
+    print(" Welcome to ENSF-592 project on UN Statistics")
+    print("----------------------------------------------")
     print(color.reset, end="")
 
     # show the splash screen for 1.5 seconds and then clear again
@@ -70,7 +70,7 @@ def program_menu():
 
         print("\n" + color.yellow + "Program menu" + color.reset)
         # generic options
-        print("\n[1] Print the imported datasets")
+        print("\n[1] Print the imported dataframes")
         print("\n[2] Re-export the entire merged hierarchical dataset into Excel")
         print("\n[3] Print aggregate stats for the entire dataset")
 
@@ -80,7 +80,7 @@ def program_menu():
         print(
             "\n[5] Print the list of countries that have higher GDP per capita than USA, and the year")
         print(
-            "\n[6] Show plot of Population Increase, Total Fertility Rate and Life Expectancy for a country")
+            "\n[6] Compare four different countries on various statistical data and plot graphs")
 
         print("\n[0] Exit")
 
@@ -110,33 +110,33 @@ def program_menu():
         # after getting a valid option from the user, perform the requested option
 
         if choice == 1:
-            analysis.print_imported_dataframes()
-            input("\n" + color.blue +
+            analysis.print_imported_dataframes(choice)
+            input("\n" + color.cyan +
                   "Press enter to return to the menu " + color.reset)
 
         elif choice == 2:
-            analysis.export_dataset()
-            input("\n" + color.blue +
+            analysis.export_dataset(choice)
+            input("\n" + color.cyan +
                   "Press enter to return to the menu " + color.reset)
 
         elif choice == 3:
-            analysis.print_aggregate_stats()
-            input("\n" + color.blue +
+            analysis.print_aggregate_stats(choice)
+            input("\n" + color.cyan +
                   "Press enter to return to the menu " + color.reset)
 
         elif choice == 4:
-            analysis.group_by_stats()
-            input("\n" + color.blue +
+            analysis.group_by_stats(choice)
+            input("\n" + color.cyan +
                   "Press enter to return to the menu " + color.reset)
 
         elif choice == 5:
-            analysis.higher_gdp_than_usa()
-            input("\n" + color.blue +
+            analysis.higher_gdp_than_usa(choice)
+            input("\n" + color.cyan +
                   "Press enter to return to the menu " + color.reset)
 
         else:  # choice == 6:
-            analysis.pivot_plot()
-            input("\n" + color.blue +
+            analysis.pivot_plot(choice)
+            input("\n" + color.cyan +
                   "Press enter to return to the menu " + color.reset)
 
 

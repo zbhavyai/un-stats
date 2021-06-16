@@ -32,16 +32,17 @@ class DataAnalysis:
         _dataset  (dataframe):          pandas dataframe to hold merged, indexed dataset
 
     Methods:
-        _import_data():                 Method to import the known files from the relative locations in the project directory
-        _merge_data():                  Method to merge the data from different dataframes into one dataframe
-        _additional_statistics():       Method to add additional columns to the dataframe
-        _check_null():                  Method to check null values in the dataframe.
-        export_dataset():               Method to export the entire merged hierarchical dataframe into Excel file
-        print_imported_dataframes():    Method to print dataframes imported from Excel or CSV
-        print_aggregate_stats():        Method to print aggregate stats for the entire dataset
-        group_by_stats():               Method to print aggregate stats grouped by UN Region/UN Sub-Region
-        higher_gdp_than_usa():          Method to list countries having GDP per capita than the USA
-        pivot_plot():                   Method to plot graphs on for four different countries on various aspects
+        _import_data(default_location, custom_location):    Method to import the known files from the
+                                                            relative locations in the project directory
+        _merge_data():                                      Method to merge the data from different dataframes into one dataframe
+        _additional_statistics():                           Method to add additional columns to the dataframe
+        _check_null():                                      Method to check null values in the dataframe.
+        export_dataset(option_num=0):                       Method to export the entire merged hierarchical dataframe into Excel file
+        print_imported_dataframes(option_num):              Method to print dataframes imported from Excel or CSV
+        print_aggregate_stats(option_num):                  Method to print aggregate stats for the entire dataset
+        group_by_stats(option_num):                         Method to print aggregate stats grouped by UN Region/UN Sub-Region
+        higher_gdp_than_usa(option_num):                    Method to list countries having GDP per capita than the USA
+        pivot_plot(option_num):                             Method to plot graphs on for four different countries on various aspects
     """
 
     def __init__(self):
@@ -67,8 +68,11 @@ class DataAnalysis:
         print("\n[Step 5/5] Exporting entire merged hierarchical dataset into excel")
         self.export_dataset()
         print("[Step 5/5] " + color.green + "complete" + color.reset)
-        input("\n\n" + color.blue +
+
+        input("\n\n" + color.cyan +
               "Press enter to enter program menu " + color.reset)
+
+
 
     def _import_data(self, default_location, custom_location):
         """
@@ -136,8 +140,6 @@ class DataAnalysis:
         # join dataframe liv_data_temp and liv_data_expectancy
         self._liv_data = pd.merge(liv_data_temp, liv_data_expectancy, how="inner", on=[
                                   "Region/Country/Area", "Year"])
-
-        self._liv_data.to_excel("living_data.xlsx")
         # ----------------------------------------
 
         # Importing UN Population Dataset 2
@@ -161,6 +163,8 @@ class DataAnalysis:
         self._gdp_data = gdp_data_raw[gdp_data_raw["Series"] == filter_series].drop(
             "Series", axis=1).rename(columns={"Value": filter_series}).reset_index(drop=True)
         # ----------------------------------------
+
+
 
     def _merge_data(self):
         """
@@ -194,6 +198,8 @@ class DataAnalysis:
         # dropping the null values
         self._dataset.dropna(inplace=True)
 
+
+
     def _additional_statistics(self):
         """
         Method to add additional columns to the dataframe
@@ -209,7 +215,8 @@ class DataAnalysis:
 
         # Extra column 1
         # ----------------------------------------
-        # Adding extra column "GDP per capita wrt USA", which is ratio of "GDP per capita (US dollars)" of the country and "GDP per capita (US dollars)" of the "United States of America"
+        # Adding extra column "GDP per capita wrt USA", which is ratio of "GDP per capita (US dollars)"
+        # of the country and "GDP per capita (US dollars)" of the "United States of America"
 
         usa = "United States of America"
 
@@ -255,6 +262,8 @@ class DataAnalysis:
         print("Added column \'Ratio of Annual Rate of Population Increase to GDP per Capita\' to the dataset")
         # ----------------------------------------
 
+
+
     def _check_null(self):
         """
         Method to check null values in the dataframe.
@@ -267,16 +276,24 @@ class DataAnalysis:
         """
         print(self._dataset.isnull().any())
 
-    def export_dataset(self):
+
+
+    def export_dataset(self, option_num=0):
         """
         Method to export the entire merged hierarchical dataframe into Excel files with default filename
 
             Parameters:
-                none
+                option_num (int): program menu option number
 
             Returns:
                 None
         """
+        if option_num != 0:
+            clear_console()
+
+            print("\n" + color.yellow +
+                  "Menu option " + str(int(option_num)) + ": Exporting merged hierarchical dataframe" + color.reset)
+
         try:
             self._dataset.to_excel("Export UN Data.xlsx",
                                    index=True, header=True)
@@ -286,16 +303,23 @@ class DataAnalysis:
             print("\n" + color.red + "An exception occurred during export. Please check the below message and try again" + color.reset + "\n")
             print(e)
 
-    def print_imported_dataframes(self):
+
+
+    def print_imported_dataframes(self, option_num):
         """
         Method to print dataframes imported from Excel or CSV
 
             Parameters:
-                none
+                option_num (int): program menu option number
 
             Returns:
                 None
         """
+        clear_console()
+
+        print("\n" + color.yellow +
+              "Menu option " + str(int(option_num)) + ": Printing imported dataframes" + color.reset)
+
         print("\n\n" + color.green + "UN Codes dataframe" + color.reset + "\n")
         print(self._unc_data)
 
@@ -311,26 +335,14 @@ class DataAnalysis:
               "UN Gross Domestic Product dataframe" + color.reset + "\n")
         print(self._gdp_data)
 
-    def print_aggregate_stats(self):
+
+
+    def print_aggregate_stats(self, option_num):
         """
         Method to print aggregate stats for the entire dataset
 
             Parameters:
-                none
-
-            Returns:
-                None
-        """
-        print("\n" + color.green +
-              "Aggregate statistics for the entire dataset" + color.reset + "\n")
-        print(self._dataset.describe())
-
-    def group_by_stats(self):
-        """
-        Method to print the one or several aggregate stats grouped by UN Region/UN Sub-Region ranging in years for the dataframe.
-
-            Parameters:
-                none
+                option_num (int): program menu option number
 
             Returns:
                 None
@@ -338,11 +350,32 @@ class DataAnalysis:
         clear_console()
 
         print("\n" + color.yellow +
-              "Sub Menu: Aggregation stats grouped by UN Region/UN Sub-Region" + color.reset)
+              "Menu option " + str(int(option_num)) + ": Printing aggregate statistics for the entire dataset" + color.reset)
+
+        print("\n\n" + color.green +
+              "Aggregate statistics for the entire dataset" + color.reset + "\n")
+        print(self._dataset.describe())
+
+
+
+    def group_by_stats(self, option_num):
+        """
+        Method to print the one or several aggregate stats grouped by UN Region/UN Sub-Region ranging in years for the dataframe.
+
+            Parameters:
+                option_num (int): program menu option number
+
+            Returns:
+                None
+        """
+        clear_console()
+
+        print("\n" + color.yellow +
+              "Menu option " + str(int(option_num)) + ": Aggregation stats grouped by UN Region/UN Sub-Region" + color.reset)
 
         while(True):
             try:
-                print("\n" + color.magenta +
+                print("\n\n" + color.magenta +
                       "[Q1] How do you want to get aggregate stats? By \"UN Region\" or By \"UN Sub-Region\"" + color.reset)
                 choice_region_type = input(
                     "\nEnter either \"UN Region\" or \"UN Sub-Region\" (without the quotes): ")
@@ -415,33 +448,16 @@ class DataAnalysis:
         print(self._dataset.groupby([choice_region_type, "Year"])[
               choice_column].aggregate(choice_stat).unstack())
 
-    def higher_gdp_than_usa(self):
+
+
+    def higher_gdp_than_usa(self, option_num):
         """
         Method to show use of additional column "GDP per capita wrt USA". This method lists the
         countries that have had higher GDP per capita than the USA, and the years in which
         the said figure was higher
 
             Parameters:
-                none
-
-            Returns:
-                None
-        """
-        higher_gdp = self._dataset[self._dataset["GDP per capita wrt USA"] > 1].reset_index(
-        )
-
-        print("\n" + color.green + "Showing list of countries that have had higher GDP per capita than USA and in what year" + color.reset + "\n")
-        higher_gdp = higher_gdp[["Country", "Year"]
-                                ].sort_values(by=["Country", "Year"])
-        print(higher_gdp.to_string(index=False))
-
-    def pivot_plot(self):
-        """
-        Method to plot graphs on Population Rate, Fertility Rate, Life Expectancy, and Urban Population
-        for four different countries
-
-            Parameters:
-                none
+                option_num (int): program menu option number
 
             Returns:
                 None
@@ -449,8 +465,37 @@ class DataAnalysis:
         clear_console()
 
         print("\n" + color.yellow +
-              "Sub Menu: Plotting graphs using pivot table" + color.reset)
-        print("\nWe will print compare four countries on the basis of -")
+              "Menu option " + str(int(option_num)) +
+              ": Countries with higher GDP per capita than United States of America and the corresponding year" + color.reset)
+
+        higher_gdp = self._dataset[self._dataset["GDP per capita wrt USA"] > 1].reset_index(
+        )
+
+        print("\n\n" + color.green +
+              "Here are the requested stats" + color.reset + "\n")
+
+        higher_gdp = higher_gdp[["Country", "Year"]
+                                ].sort_values(by=["Country", "Year"])
+        print(higher_gdp.to_string(index=False))
+
+
+
+    def pivot_plot(self, option_num):
+        """
+        Method to plot graphs on Population Rate, Fertility Rate, Life Expectancy, and Urban Population
+        for four different countries
+
+            Parameters:
+                option_num (int): program menu option number
+
+            Returns:
+                None
+        """
+        clear_console()
+
+        print("\n" + color.yellow +
+              "Menu option " + str(int(option_num)) + ": Plotting graphs using pivot table" + color.reset)
+        print("\nWe will compare four countries on the basis of -")
         print(" - Population annual rate of increase (percent)")
         print(" - Total fertility rate (children per women)")
         print(" - Life expectancy at birth for both sexes (years)")
@@ -465,7 +510,7 @@ class DataAnalysis:
         for i in range(0, 4):
             while(True):
                 try:
-                    choice_country = input("Enter country " + str(i+1) + " : ")
+                    choice_country = input("Enter country " + str(i+1) + ": ")
 
                     # if its a valid country
                     if(choice_country in self._dataset.index.get_level_values(2).values):
@@ -503,8 +548,11 @@ class DataAnalysis:
         subset = self._dataset.loc[idx[:, :, countries, idx[:]]]
 
         # choose only the required columns from the subset
-        subset = subset.loc[idx[:], idx["Year", "Population annual rate of increase (percent)", "Total fertility rate (children per women)",
-                                        "Life expectancy at birth for both sexes (years)", "Urban population (percent)"]]
+        subset = subset.loc[idx[:], idx["Year",
+                                        "Population annual rate of increase (percent)",
+                                        "Total fertility rate (children per women)",
+                                        "Life expectancy at birth for both sexes (years)",
+                                        "Urban population (percent)"]]
 
         # creating pivot table
         pivot_data = subset.pivot_table(index="Year", columns="Country")
@@ -518,7 +566,7 @@ class DataAnalysis:
         # plt.style.use('classic')      # not using custom style
         fig = plt.figure(1)
         fig.set_size_inches(20, 10)
-        fig.suptitle("Comparison of countries on various aspects")
+        fig.suptitle("Comparison of countries on various statistical data")
 
         (axs0, axs1) = fig.subplots(2, 2)
 
