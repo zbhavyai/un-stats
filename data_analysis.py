@@ -25,11 +25,11 @@ class DataAnalysis:
         - exports the entire merged hierarchical dataset into excel
 
     Attributes:
-        _unc_data
-        _liv_data
-        _pop_data
-        _gdp_data
-        _dataset
+        _unc_data (dataframe):          pandas dataframe to hold data imported from 'UN Codes.xlsx'
+        _liv_data (dataframe):          pandas dataframe to hold data imported from 'UN Population Dataset 1.xlsx'
+        _pop_data (dataframe):          pandas dataframe to hold data imported from 'UN Population Dataset 2.xlsx'
+        _gdp_data (dataframe):          pandas dataframe to hold data imported from 'UNGDPData.csv'
+        _dataset  (dataframe):          pandas dataframe to hold merged, indexed dataset
 
     Methods:
         _import_data():                 Method to import the known files from the relative locations in the project directory
@@ -489,7 +489,7 @@ class DataAnalysis:
                 except ValueDuplicate as e:
                     print("\n" + color.red + str(e) + color.reset + "\n")
 
-        # sort the list countries
+        # sort the list countries. Sorting makes sure plotting and legends are aligned
         countries.sort()
 
         # now we have got four different countries, lets plot the graphs
