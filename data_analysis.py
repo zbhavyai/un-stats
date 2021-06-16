@@ -457,7 +457,9 @@ class DataAnalysis:
         print(" - Urban population (percent)")
 
         print("\n" + color.magenta +
-              "Please enter four unique countries, one at a time. eg. United States of America" + color.reset + "\n")
+              "Please enter four distinct countries, one at a time. eg. United States of America" + color.reset + "\n")
+
+        # creating an empty list of countries that will hold user inputs
         countries = []
 
         for i in range(0, 4):
