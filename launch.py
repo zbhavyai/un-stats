@@ -2,7 +2,7 @@
 # Authors:     Bhavyai Gupta, Brandon Attai
 # Description: Source Code to control the execution flow for the Project
 
-import ansi_colors as color
+from ansi_colors import Color as color
 from custom_errors import ValueOutOfRange
 import data_analysis as da
 import time

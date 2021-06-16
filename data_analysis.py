@@ -5,7 +5,7 @@
 from custom_errors import ValueOutOfRange
 from custom_errors import ValueDuplicate
 import pandas as pd
-import ansi_colors as color
+from ansi_colors import Color as color
 import time
 import os
 import matplotlib.pyplot as plt
