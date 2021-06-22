@@ -48,11 +48,7 @@ Below datasets are used in the project
 
 + matplotlib 3.4.2
 
-+ pillow 8.2.0
-
 + openpyxl 3.0.7
-
-+ xlrd 2.0.1
 
 
 
