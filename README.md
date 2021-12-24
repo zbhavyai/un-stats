@@ -1,33 +1,12 @@
 # UN Stats
 
-## What is it
-
 A mini data science project to process the UN Population and GDP data based on user inputs using NumPy/Pandas and display the statistics using Matplotlib
 
-Below datasets are used in the project
-
+Below datasets are used in the project -
 + [UN Region, Sub-Region and Country](https://data.un.org/_Docs/SYB/CSV/SYB63_1_202105_Population,%20Surface%20Area%20and%20Density.csv)
-
 + [Population Growth, Fertility, Life Expectancy and Mortality](https://data.un.org/_Docs/SYB/CSV/SYB62_246_201907_Population%20Growth,%20Fertility%20and%20Mortality%20Indicators.csv)
-
 + [Population in the Capital City, Urban and Rural Areas](https://data.un.org/_Docs/SYB/CSV/SYB61_253_Population%20Growth%20Rates%20in%20Urban%20areas%20and%20Capital%20cities.csv)
-
 + [GDP and GDP per Capita](https://data.un.org/_Docs/SYB/CSV/SYB63_230_202009_GDP%20and%20GDP%20Per%20Capita.csv)
-
-
-
-### Course Instructor
-
-[Dr. Emily Marasco](https://schulich.ucalgary.ca/contacts/emily-marasco)
-
-
-
-### Group Members
-
-[Bhavyai Gupta (myself)](https://github.com/zbhavyai)
-
-[Brandon Attai](https://github.com/b-attai)
-
 
 
 ## Features
@@ -39,29 +18,25 @@ Below datasets are used in the project
 + Compare countries on various statistics and plot the graphs
 
 
-
 ## Dependencies
 
 + numpy 1.20.3
-
 + pandas 1.2.4
-
 + matplotlib 3.4.2
-
 + openpyxl 3.0.7
 
 
+## How to run
 
-## How to use
+1. Clone the repository on your machine
 
-+ Run the `launch.py` file
+2. Run the [launch.py](launch.py) file
 
-   ```python
-   python launch.py
+   ```bash
+   $ python launch.py
    ```
 
-+ Follow the onscreen instructions
-
+3. Follow the onscreen instructions
 
 
 ## Screenshots
@@ -120,3 +95,10 @@ Below datasets are used in the project
 + Exiting the program
 
    ![Screenshots/13_Menu_Option_0_Exit.png](Screenshots/13_Menu_Option_0_Exit.png)
+
+
+## Contributors
+
+- [Bhavyai Gupta](https://github.com/zbhavyai)
+- [Brandon Attai](https://github.com/b-attai)
+
